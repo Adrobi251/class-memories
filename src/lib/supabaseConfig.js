@@ -13,3 +13,8 @@ export function getPublicUrl(path) {
   if (!path) return null
   return `${SUPABASE_URL}/storage/v1/object/public/${MEDIA_BUCKET}/${path}`
 }
+
+export function brandingUrl(file) {
+  if (!file) return null
+  return getPublicUrl(`branding/${file}`)
+}

@@ -262,30 +262,60 @@ Bisa juga dikombinasikan: backend Supabase lokal dari Docker, frontend hasil bui
 
 ## Aset gambar
 
-Foto **tidak disertakan** di repositori ini. Yang di-commit hanya struktur folder
-`public/images/` lewat file `.gitkeep`.
+Foto hero dan story disimpan di **Supabase Storage**, bukan di repo, sehingga GitHub tetap bersih dan Vercel bisa auto-deploy tanpa download foto besar.
 
-Untuk menampilkan foto hero dan story:
+### Workflow lokal
 
-1. Buat folder `images/` di root project (kalau belum ada), lalu taruh foto asli di sana.
-2. Samakan nama file dengan yang ada di `scripts/optimize-images.mjs`:
+1. Taruh foto asli di folder `images/`:
    - `Studio Session-30365.jpg` → hero
    - `Studio Session-30412.jpg` → story
-3. Jalankan:
+
+2. Generate WebP dengan sharp:
 
    ```bash
    npm run images
    ```
 
-   Output WebP (`hero-*.webp`, `story-*.webp`) masuk ke `public/images/`.
-4. Jalankan `npm run build`.
+   Output: `public/images/hero-960.webp`, `hero-1280.webp`, `hero-1920.webp`, `story-960.webp`, `story-1280.webp`, `story-1920.webp` (untuk testing lokal).
 
-Folder `images/`, file `public/images/*.webp`, dan `dist/` tidak ikut di-commit.
-Tanpa langkah di atas, situs tetap bisa dibuka, tetapi background hero dan story
-akan kosong dan browser mencatat 404 untuk file gambarnya.
+3. Test situs dengan photo lokal:
 
-Kalau hanya mengganti foto, cukup ulangi langkah 1–4. Nama file sumber yang dipakai
-ada di `scripts/optimize-images.mjs`.
+   ```bash
+   npm run dev
+   ```
+
+   Hero dan story akan tampil dari folder lokal `public/images/`.
+
+### Upload ke Supabase Storage
+
+Untuk deploy ke production (Vercel), foto harus di-upload ke Supabase agar situs mengambilnya dari sana.
+
+1. **Supabase Dashboard → Storage → bucket `media` → New folder → nama `branding`**
+2. Upload 6 file WebP dari folder `public/images/`:
+   - `hero-960.webp`, `hero-1280.webp`, `hero-1920.webp`
+   - `story-960.webp`, `story-1280.webp`, `story-1920.webp`
+3. Verifikasi URL publik bisa diakses (buka di browser):
+   ```
+   https://<project-ref>.supabase.co/storage/v1/object/public/media/branding/hero-1920.webp
+   ```
+
+Policy RLS `storage media public read` (dari `schema.sql`) sudah mengizinkan akses publik ke seluruh bucket `media`, termasuk folder `branding/`.
+
+### Kode yang menggunakan foto
+
+- `src/lib/supabaseConfig.js`: helper `brandingUrl(file)` mengakses folder `branding/` di Supabase
+- `src/components/Hero.jsx`: menggunakan `brandingUrl('hero-960.webp')` dst.
+- `src/components/Story.jsx`: menggunakan `brandingUrl('story-960.webp')` dst.
+- `index.html`: preload hero dari `%VITE_SUPABASE_URL%/storage/v1/object/public/media/branding/hero-1920.webp`
+
+Lokal di `npm run dev`, situs akan error karena `brandingUrl()` mencoba akses Supabase. Untuk test dengan foto lokal, edit `Hero.jsx` dan `Story.jsx` sementara ganti `brandingUrl('hero-...')` jadi `/images/hero-...`, lalu ubah kembali sebelum commit.
+
+### Untuk deploy
+
+- Pastikan 6 file WebP sudah di-upload ke `media/branding/` di Supabase (langkah di atas).
+- Import repo GitHub ini ke Vercel, isi env `VITE_SUPABASE_URL` dan `VITE_SUPABASE_ANON_KEY`.
+- Deploy. Situs akan mengambil hero dan story dari Supabase Storage.
+- Repo tetap tidak punya file WebP.
 
 ## Deploy ke Vercel
 

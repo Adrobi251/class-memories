@@ -1,5 +1,6 @@
 ﻿import { ArrowRight, Play, Upload } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import { brandingUrl } from '../lib/supabaseConfig'
 import { site } from '../lib/site'
 
 export default function Hero({ onUploadClick }) {
@@ -14,11 +15,11 @@ export default function Hero({ onUploadClick }) {
       <picture>
         <source
           type="image/webp"
-          srcSet="/images/hero-960.webp 960w, /images/hero-1920.webp 1920w"
+          srcSet={`${brandingUrl('hero-960.webp')} 960w, ${brandingUrl('hero-1920.webp')} 1920w`}
           sizes="100vw"
         />
         <img
-          src="/images/hero-1920.webp"
+          src={brandingUrl('hero-1920.webp')}
           alt=""
           aria-hidden="true"
           fetchPriority="high"

@@ -1,4 +1,5 @@
 import { ArrowRight } from 'lucide-react'
+import { brandingUrl } from '../lib/supabaseConfig'
 import Reveal from './Reveal'
 
 export default function Story() {
@@ -11,11 +12,11 @@ export default function Story() {
       <picture>
         <source
           type="image/webp"
-          srcSet="/images/story-960.webp 960w, /images/story-1920.webp 1920w"
+          srcSet={`${brandingUrl('story-960.webp')} 960w, ${brandingUrl('story-1920.webp')} 1920w`}
           sizes="100vw"
         />
         <img
-          src="/images/story-1920.webp"
+          src={brandingUrl('story-1920.webp')}
           alt=""
           aria-hidden="true"
           loading="lazy"
