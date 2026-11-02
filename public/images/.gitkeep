@@ -1,0 +1,4 @@
+# Folder ini sengaja dikosongkan di repositori.
+#
+# Foto asli tidak ikut di-commit. Taruh foto sumber di /images, lalu jalankan
+# `npm run images` untuk menghasilkan hero-*.webp dan story-*.webp di sini.
