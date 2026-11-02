@@ -2,6 +2,7 @@
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Gallery from './components/Gallery'
+import QuoteSection from './components/QuoteSection'
 import Footer from './components/Footer'
 import StatusToast from './components/StatusToast'
 import { useAuth } from './context/AuthContext'
@@ -62,20 +63,61 @@ export default function App() {
 
         <section id="galeri" className="scroll-mt-16 bg-paper-soft py-16 sm:py-24">
           <div className="mx-auto max-w-[1280px] px-6">
-            <div className="mb-10 grid gap-4 border-b border-ink pb-4 sm:items-end md:grid-cols-12">
-              <div className="md:col-span-8">
+            <div className="mb-10 grid gap-6 border-b border-ink pb-5 sm:items-end md:grid-cols-12">
+              <div className="md:col-span-7">
                 <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
                   02 - Galeri
                 </p>
-                <h2 id="galeri-title" tabIndex={-1} className="mt-2 text-3xl font-bold uppercase tracking-tight sm:text-4xl">
+                <h2
+                  id="galeri-title"
+                  tabIndex={-1}
+                  className="mt-2 text-3xl font-bold uppercase tracking-tight sm:text-4xl"
+                >
                   Galeri kenangan
                 </h2>
+                <p className="mt-3 max-w-[52ch] text-sm leading-relaxed text-muted">
+                  Foto dan video kelas, diurutkan dari dokumentasi terbaru.
+                </p>
               </div>
-              <p className="text-sm leading-relaxed text-muted md:col-span-4 md:text-right">
-                {isAdmin
-                  ? 'Kamu masuk sebagai admin. Unggah atau hapus dokumentasi lewat tombol di setiap kartu.'
-                  : 'Dokumentasi foto dan video kelas yang diunggah oleh admin.'}
-              </p>
+
+              <div className="flex flex-col gap-3 md:col-span-5 md:items-end md:text-right">
+                <nav
+                  aria-label="Navigasi bagian"
+                  className="flex flex-wrap items-center gap-x-2 font-mono text-[11px] uppercase tracking-[0.16em] text-muted"
+                >
+                  <a
+                    href="#beranda"
+                    className="inline-flex min-h-11 items-center transition-colors duration-200 hover:text-ink"
+                  >
+                    Beranda
+                  </a>
+                  <span aria-hidden="true" className="text-cool">
+                    /
+                  </span>
+                  <a
+                    href="#galeri"
+                    aria-current="location"
+                    className="inline-flex min-h-11 items-center text-signal"
+                  >
+                    Galeri
+                  </a>
+                  <span aria-hidden="true" className="text-cool">
+                    /
+                  </span>
+                  <a
+                    href="#tentang"
+                    className="inline-flex min-h-11 items-center transition-colors duration-200 hover:text-ink"
+                  >
+                    Tentang
+                  </a>
+                </nav>
+
+                <p className="max-w-[38ch] text-sm leading-relaxed text-muted">
+                  {isAdmin
+                    ? 'Kamu masuk sebagai admin. Unggah atau hapus dokumentasi lewat tombol di setiap kartu.'
+                    : 'Publik bisa melihat seluruh arsip. Unggah dan hapus khusus admin.'}
+                </p>
+              </div>
             </div>
 
             <Gallery
@@ -89,6 +131,8 @@ export default function App() {
             />
           </div>
         </section>
+
+        <QuoteSection />
       </main>
 
       <Footer />
@@ -104,3 +148,4 @@ export default function App() {
     </div>
   )
 }
+

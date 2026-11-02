@@ -12,9 +12,9 @@ export default function Footer() {
               Tentang arsip
             </p>
             <p className="mt-3 max-w-[48ch] text-sm leading-relaxed text-ink-soft">
-              Class Memories adalah arsip digital kelas: foto dan video yang dikurasi
-              admin agar setiap momen tetap bisa dilihat kembali. Publik hanya bisa
-              membaca; unggah dan hapus khusus admin.
+              Class Memories Web 3 adalah arsip digital kelas: foto dan video yang
+              dikurasi admin agar setiap momen tetap bisa dilihat kembali. Publik hanya
+              bisa membaca; unggah dan hapus khusus admin.
             </p>
           </div>
 
@@ -30,8 +30,23 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-2 border-t border-line pt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>Copyright {YEAR} Class Memories</p>
+        <div className="mt-10 grid gap-6 border-t border-line pt-8 sm:grid-cols-2">
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+              Dibuat oleh
+            </p>
+            <p className="mt-2 text-sm font-semibold text-ink">Tim Class Memories Web 3</p>
+          </div>
+          <div className="sm:text-right">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+              Didukung oleh
+            </p>
+            <p className="mt-2 text-sm font-semibold text-ink">Kelas Web 3</p>
+          </div>
+        </div>
+
+        <div className="mt-8 flex flex-col gap-2 border-t border-line pt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-muted sm:flex-row sm:items-center sm:justify-between">
+          <p>Copyright {YEAR} Class Memories Web 3</p>
           <p className="flex items-center gap-2">
             <Lock className="size-3" aria-hidden="true" />
             Area admin terlindungi

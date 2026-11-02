@@ -7,6 +7,7 @@ import GalleryCard from './GalleryCard'
 import GalleryEmpty from './GalleryEmpty'
 import GalleryFilterEmpty from './GalleryFilterEmpty'
 import GallerySkeleton from './GallerySkeleton'
+import GalleryStrip from './GalleryStrip'
 import GalleryToolbar from './GalleryToolbar'
 import MediaPreview from './MediaPreview'
 import { MEDIA_BUCKET, supabase } from '../lib/supabase'
@@ -143,6 +144,14 @@ export default function Gallery({
 
   return (
     <>
+      <GalleryStrip
+        media={media}
+        onOpen={(item) => {
+          setFilter('semua')
+          setSelectedId(item.id)
+        }}
+      />
+
       <GalleryToolbar
         filter={filter}
         onChange={setFilter}
@@ -204,3 +213,4 @@ export default function Gallery({
     </>
   )
 }
+
