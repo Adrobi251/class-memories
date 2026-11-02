@@ -27,3 +27,10 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Local AI skills (not part of the project)
+.opencode/
