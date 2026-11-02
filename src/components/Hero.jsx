@@ -1,6 +1,7 @@
 ﻿import { motion } from 'motion/react'
 import { ArrowRight, Upload } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import HeroArchivePanel from './HeroArchivePanel'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -11,7 +12,7 @@ const fadeUp = {
   }),
 }
 
-export default function Hero({ count = 0, onUploadClick }) {
+export default function Hero({ media = [], onUploadClick }) {
   const { isAdmin } = useAuth()
 
   return (
@@ -88,38 +89,9 @@ export default function Hero({ count = 0, onUploadClick }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.42, ease: 'easeOut', delay: 0.2 }}
             className="lg:col-span-4 lg:border-l lg:border-line lg:pl-10"
-            aria-label="Status arsip"
+            aria-label="Pratinjau arsip"
           >
-            <div className="rounded-lg bg-deep-blue p-6 text-white">
-              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/70">
-                Status arsip
-              </p>
-              <p className="mt-4 font-mono text-6xl font-medium leading-none">
-                {String(count).padStart(2, '0')}
-              </p>
-              <p className="mt-2 text-sm text-white/80">dokumen tersimpan</p>
-
-              <dl className="mt-8 space-y-3 border-t border-white/30 pt-4 font-mono text-[11px] uppercase tracking-[0.12em]">
-                <div className="flex items-baseline justify-between gap-4">
-                  <dt className="text-white/60">Tahun ajaran</dt>
-                  <dd>2025 / 2026</dd>
-                </div>
-                <div className="flex items-baseline justify-between gap-4">
-                  <dt className="text-white/60">Akses</dt>
-                  <dd>Publik / Admin</dd>
-                </div>
-                <div className="flex items-baseline justify-between gap-4">
-                  <dt className="text-white/60">Format</dt>
-                  <dd>JPG - MP4</dd>
-                </div>
-              </dl>
-            </div>
-
-            <div className="mt-3 flex gap-3" aria-hidden="true">
-              <div className="h-14 flex-1 bg-signal" />
-              <div className="h-14 w-14 border border-ink" />
-              <div className="h-14 w-14 border border-line bg-paper" />
-            </div>
+            <HeroArchivePanel media={media} />
           </motion.aside>
         </div>
 
@@ -132,3 +104,4 @@ export default function Hero({ count = 0, onUploadClick }) {
     </section>
   )
 }
+

@@ -82,14 +82,29 @@ export default function Navbar({ onLoginClick, onUploadClick }) {
 
       <header className="fixed inset-x-0 top-0 z-[100] border-b border-line bg-paper">
         <nav className="mx-auto flex h-16 max-w-[1280px] items-center justify-between px-6">
-          <a href="#beranda" className="flex min-h-11 items-center gap-3" onClick={() => setActive('beranda')}>
+          <a
+            href="#beranda"
+            aria-label="Class Memories Web 3 - Beranda"
+            className="flex min-h-11 items-center gap-3"
+            onClick={() => setActive('beranda')}
+          >
             <span className="grid size-9 place-items-center rounded-lg bg-signal font-mono text-[11px] font-medium tracking-[0.12em] text-white">
               CM
             </span>
-            <span className="block whitespace-nowrap">
-              <span className="block text-sm font-bold uppercase tracking-[0.18em]">Class Memories</span>
-              <span className="mt-0.5 hidden font-mono text-[10px] uppercase tracking-[0.2em] text-muted sm:block">
+            <span className="hidden sm:block">
+              <span className="block whitespace-nowrap text-sm font-bold uppercase tracking-[0.18em]">
+                Class Memories Web 3
+              </span>
+              <span className="mt-0.5 block font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
                 Arsip kelas / 2026
+              </span>
+            </span>
+            <span className="sm:hidden">
+              <span className="block whitespace-nowrap text-[13px] font-bold uppercase leading-tight tracking-[0.12em]">
+                Class Memories
+              </span>
+              <span className="mt-0.5 block font-mono text-[10px] uppercase leading-tight tracking-[0.16em] text-muted">
+                Web 3
               </span>
             </span>
           </a>

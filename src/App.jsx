@@ -45,7 +45,7 @@ export default function App() {
         />
 
         <main id="main-content" tabIndex={-1} className="outline-none">
-          <Hero count={media.length} onUploadClick={() => setUploadOpen(true)} />
+          <Hero media={media} onUploadClick={() => setUploadOpen(true)} />
 
           <section id="galeri" className="scroll-mt-16 bg-paper-soft py-16 sm:py-24">
             <div className="mx-auto max-w-[1280px] px-6">
