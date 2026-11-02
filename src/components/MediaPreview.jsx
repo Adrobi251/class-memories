@@ -1,6 +1,6 @@
 ﻿import { useState } from 'react'
 import { ArrowUpRight, ChevronLeft, ChevronRight, ImageOff } from 'lucide-react'
-import { getPublicUrl } from '../lib/supabase'
+import { getPublicUrl } from '../lib/supabaseConfig'
 
 export default function MediaPreview({
   item,
@@ -28,7 +28,7 @@ export default function MediaPreview({
             poster={poster ?? undefined}
             controls
             preload="metadata"
-            className="max-h-[65vh] w-full bg-ink"
+            className="max-h-[65vh] w-full bg-black"
           />
         ) : failed ? (
           <div className="grid aspect-[4/3] place-items-center gap-2 bg-paper-soft p-6 text-center">
@@ -53,7 +53,7 @@ export default function MediaPreview({
           href={src}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-line px-3 font-mono text-[11px] uppercase tracking-[0.12em] text-ink transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-white"
+          className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-line px-3 font-mono text-[11px] uppercase tracking-[0.12em] text-ink transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-paper"
         >
           Buka file
           <ArrowUpRight className="size-3.5" aria-hidden="true" />
@@ -70,7 +70,7 @@ export default function MediaPreview({
             type="button"
             onClick={onPrev}
             aria-label="Dokumentasi sebelumnya"
-            className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-line px-3 text-xs font-semibold uppercase tracking-[0.08em] text-ink transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-white"
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-line px-3 text-xs font-semibold uppercase tracking-[0.08em] text-ink transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-paper"
           >
             <ChevronLeft className="size-4" aria-hidden="true" />
             <span className="hidden sm:inline">Sebelumnya</span>
@@ -88,7 +88,7 @@ export default function MediaPreview({
             type="button"
             onClick={onNext}
             aria-label="Dokumentasi berikutnya"
-            className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-line px-3 text-xs font-semibold uppercase tracking-[0.08em] text-ink transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-white"
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-line px-3 text-xs font-semibold uppercase tracking-[0.08em] text-ink transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-paper"
           >
             <span className="hidden sm:inline">Berikutnya</span>
             <ChevronRight className="size-4" aria-hidden="true" />

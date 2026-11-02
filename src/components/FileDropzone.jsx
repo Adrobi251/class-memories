@@ -77,7 +77,7 @@ export default function FileDropzone({
         setDragging(false)
       }}
       onDrop={handleDrop}
-      className={`rounded-lg border border-dashed transition-colors duration-200 focus-within:border-signal focus-within:ring-2 focus-within:ring-signal/25 ${
+      className={`rounded-xl border border-dashed transition-colors duration-200 focus-within:border-signal focus-within:ring-2 focus-within:ring-signal/25 ${
         dragging ? 'border-signal ring-2 ring-signal/25' : 'border-cool hover:border-ink'
       } ${surfaceClass}`}
     >
@@ -110,7 +110,7 @@ export default function FileDropzone({
               onChange(null)
             }}
             aria-label={`Hapus file ${file.name}`}
-            className="grid size-11 shrink-0 place-items-center rounded-lg border border-line text-muted transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-white"
+            className="grid size-11 shrink-0 place-items-center rounded-lg border border-line text-muted transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-paper"
           >
             <X className="size-4" aria-hidden="true" />
           </button>
@@ -153,7 +153,7 @@ export default function FileDropzone({
       />
 
       {dropError && (
-        <p role="alert" className="border-t border-signal/30 px-3 py-2 text-xs text-signal">
+        <p role="alert" className="border-t border-signal-bright/30 px-3 py-2 text-xs text-signal-bright">
           {dropError}
         </p>
       )}

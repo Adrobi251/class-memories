@@ -13,7 +13,7 @@ const MAX_VIDEO_MB = 50
 const CACHE_CONTROL = '31536000'
 
 const inputClass =
-  'w-full rounded-lg border border-line bg-paper px-3 py-2.5 text-sm text-ink placeholder:text-muted transition-colors duration-200 focus:border-signal'
+  'w-full rounded-xl border border-line bg-paper px-3 py-2.5 text-sm text-ink placeholder:text-muted transition-colors duration-200 focus:border-signal'
 
 const labelClass = 'mb-1.5 block font-mono text-[11px] uppercase tracking-[0.16em] text-muted'
 
@@ -229,7 +229,7 @@ export default function UploadModal({ open, onClose, onUploaded }) {
         {error && (
           <p
             role="alert"
-            className="rounded-lg border border-signal bg-paper px-3 py-2 text-sm text-signal"
+            className="rounded-lg border border-signal-bright/60 bg-signal/10 px-3 py-2 text-sm text-signal-bright"
           >
             {error}
           </p>

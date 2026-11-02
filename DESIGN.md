@@ -1,137 +1,216 @@
----
-version: "alpha"
-name: "Swiss Design Gráfico"
-description: "Swiss graphic design landing page. Ideal for landing pages, saas. AI-ready template."
-colors:
-  primary: "#D82C2C"
-  secondary: "#1A1A1A"
-  tertiary: "#FFFFFF"
-  neutral: "#A9B2B1"
-  surface: "#0033A0"
-  accent: "#F2F2F2"
-typography:
-  h1:
-    fontFamily: Helvetica Neue
-    fontSize: 2.5rem
-    fontWeight: 700
-  body-md:
-    fontFamily: Helvetica Neue
-    fontSize: 1rem
-    fontWeight: 400
-spacing:
-  sm: 20.0px
-  md: 40.0px
-  lg: 80.0px
-components:
-  button-primary:
-    backgroundColor: "{colors.primary}"
-    textColor: "{colors.neutral}"
-    padding: 12px
----
+# Kerangka Desain Landing Page — Identitas Website
 
-## Overview
+## 1. Gambaran Umum
 
-Swiss graphic design landing page. Ideal for landing pages, saas. AI-ready template. Swiss Graphic Design didn't emerge from tech startups or UI kits. It came from Basel and Zürich in the 1950s — from letterpress workshops, lithographic posters, and a near-obsessive belief that typography could carry meaning without decoration. Armin Hofmann taught his students to strip away. Emil Ruder wrote the book — literally — on typographic rhythm, proving that whitespace wasn't emptiness but structure. Their posters weren't minimal for aesthetic reasons. They were minimal because every element had to earn its place.
+-   **Nama website:** Gunakan nama/brand website yang sudah ada pada proyek (Web 3).
+-   **Tujuan:** Mengikuti fungsi dan konten utama website yang sudah ada pada proyek.
+-   **Identitas website:** Gunakan logo, nama, dan brand Web 3 yang sudah tersedia pada proyek.
+-   **Identitas tambahan:** Jangan menambahkan nama sekolah atau tahun angkatan.
+-   **Bahasa antarmuka saat ini:** Inggris
+-   **Karakter desain:** Modern, elegan, minimalis, dan konsisten dengan identitas website.
 
-This is fundamentally different from what people now call 'Swiss Modernism 2.0' — that Dribbble-friendly aesthetic of geometric sans-serifs on pastel backgrounds. The original movement was rougher, more intellectual. Hofmann's work had tension. Ruder's grids weren't decorative scaffolding; they were argumentative frameworks.
+## 2. Arah Visual dan Design System
 
-Translating this to screens means understanding what survived and what didn't. The grid translated beautifully. The typographic hierarchy — large, confident, unapologetic — works even better at screen scale. But the texture of ink on uncoated stock, the slight registration misalignment of overprinted colors? That's gone. What remains is the discipline: let the grid do the talking, let type breathe, and never add what you can't justify.
+### Tema
 
-- Density: 3/10 — Airy
-- Variance: 7/10 — Dynamic
-- Motion: 4/10 — Subtle
+-   Gunakan tampilan dan mode warna yang konsisten dengan identitas Web 3.
+-   Latar belakang gelap dengan kontras teks yang jelas.
+-   Foto berukuran besar sebagai elemen visual utama.
+-   Sudut komponen membulat, garis pembatas tipis, serta efek
+    transparansi dan blur pada navigasi.
+-   Animasi ringan saat hover dan saat pengguna menggulir halaman.
 
-- **Style:** Clean, Structured, Typographic
-- **Keywords:** swiss design, international style, clean, structured, typographic, grid, minimalist, objective, functional, asymmetrical
-- **Era:** Mid-20th Century, International Typographic Style
-- **Light/Dark:** ✓ Full / ✗ No
+### Palet Warna
 
-## Colors
+Gunakan palet Color Hunt berikut:
 
-- **Signal Red** (#D82C2C) — Error states, destructive actions
-- **Black** (#1A1A1A) — Dark surface, primary background
-- **White** (#FFFFFF) — Light surface, card backgrounds
-- **Cool Grey** (#A9B2B1) — Secondary text, borders, muted elements
-- **Deep Blue** (#0033A0) — Secondary accent
-- **Light Grey** (#F2F2F2) — Secondary text, borders, muted elements
+| Token | Warna | Penggunaan |
+|---|---|---|
+| Background | `#F5F5F5` | Latar belakang utama |
+| Surface Soft | `#DFF1F1` | Latar bagian atau kartu sekunder |
+| Accent Soft | `#BBD5DA` | Border dan elemen pendukung |
+| Primary Accent | `#FF0000` | Tombol utama, tautan aktif, dan aksen penting |
 
+Sumber: [Color Hunt](https://colorhunt.co/palette/f5f5f5dff1f1bbd5daff0000).
 
-## Typography
+### Tipografi
 
-- **Display / Hero:** Helvetica Neue — Weight 700, tight tracking, used for headline impact
-- **Body:** Helvetica Neue — Weight 400, 16px/1.6 line-height, max 72ch per line
-- **UI Labels / Captions:** Helvetica Neue — 0.875rem, weight 500, slight letter-spacing
-- **Monospace:** JetBrains Mono — Used for code, metadata, and technical values
+-   **Plus Jakarta Sans:** teks antarmuka, navigasi, dan paragraf.
+-   **Playfair Display:** judul utama dan heading yang ingin terlihat
+    elegan.
+-   **Caveat:** tulisan dekoratif atau handwriting.
+-   **Material Symbols Outlined:** ikon antarmuka.
 
-Scale:
-- Hero: clamp(2.5rem, 5vw, 4rem)
-- H1: 2.25rem
-- H2: 1.5rem
-- Body: 1rem / 1.6
-- Small: 0.875rem
+### Prinsip Layout
 
+-   Kontainer konten terpusat dengan lebar maksimum sekitar `1280px`.
+-   Padding horizontal konsisten.
+-   Jarak antarseksi cukup luas agar tampilan terasa lega.
+-   Layout responsif untuk desktop, tablet, dan perangkat seluler.
+-   Foto menggunakan `object-fit: cover` agar area gambar terisi dengan
+    baik.
 
-## Layout
+## 3. Struktur Halaman
 
-- **Grid:** CSS Grid primary. Max-width containment: 1280px centered with 1.5rem side padding.
-- **Spacing rhythm:** Balanced. Base unit: 0.5rem (8px).
-- **Section vertical gaps:** clamp(4rem, 8vw, 8rem).
-- **Hero layout:** Asymmetric composition.
-- **Feature sections:** Asymmetric grid with varied card sizes. No 3-equal-columns.
-- **Mobile collapse:** All multi-column layouts collapse below 768px. No horizontal overflow.
-- **z-index contract:** base (0) / sticky-nav (100) / overlay (200) / modal (300) / toast (500).
+### A. Header / Navigasi
 
+**Posisi:** Tetap di bagian atas (*fixed header*).
 
-## Elevation & Depth
+**Bagian kiri** - Logo/ikon Web 3. - Nama website sesuai brand yang sudah ada. - Subjudul opsional sesuai deskripsi website.
 
-Strong grid system, sans-serif typography (Helvetica), asymmetrical layout, clean lines, focus on negative space, objective photography, no ornamentation, flush left rag right text
+**Bagian tengah** - Home - Gallery - Videos - Our Website - About
 
-- **Physics:** Ease-out curves, 200-300ms duration. Smooth and predictable.
-- **Entry animations:** Fade + translate-Y (16px → 0) over 420ms ease-out. Staggered cascades for lists: 80ms between items.
-- **Hover states:** Subtle color shift + shadow adjustment over 200ms.
-- **Page transitions:** Fade only (200ms).
-- **Performance:** Only transform and opacity animated. No layout-triggering properties.
+**Bagian kanan** - Tombol **Explore** dengan ikon galeri. - Tombol
+mengarah ke bagian Gallery.
 
+**Gaya visual** - Latar transparan dengan efek blur. - Garis pembatas
+tipis di bagian bawah. - Navigasi aktif diberi aksen warna biru muda. -
+Pada layar kecil, navigasi desktop disembunyikan dan perlu diganti
+dengan menu responsif.
 
-## Shapes
+### B. Hero Section / Home
 
-Base corner radius: 8px. See rounded tokens in front matter for the full scale.
+**ID bagian:** `home`
 
+**Tujuan:** Memperkenalkan identitas, fungsi, dan konten utama website.
 
-## Components
+**Elemen konten** - Visual utama yang relevan dengan website. - Overlay bila diperlukan agar teks terbaca. - Label kecil menggunakan nama/brand Web 3. - Judul dan deskripsi menjelaskan fungsi website. - Tombol utama mengarah ke fitur atau konten terpenting. - Tombol sekunder mengarah ke fitur lain yang memang tersedia. - Indikator scroll opsional.
 
-- **Primary Button:** Subtly rounded (0.5rem) shape. Accent color fill. Hover: 8% darken + subtle lift shadow. Active: -1px translate tactile press. Font weight 600. No outer glows.
-- **Secondary / Ghost Button:** Outline variant. 1.5px border in muted color. Text in primary color. Hover: subtle background fill.
-- **Cards:** Subtly rounded (0.5rem) corners. Surface background. Subtle shadow (0 2px 12px rgba(0,0,0,0.06)). 1px border stroke.
-- **Inputs:** Label above input. 1px border stroke. Focus ring: 2px accent color offset 2px. Error text below in semantic red. No floating labels.
-- **Navigation:** Primary surface background. Active item: accent color indicator. Font weight 500 when active.
-- **Skeletons:** Shimmer animation matching component dimensions. No circular spinners.
-- **Empty States:** Icon-based composition with descriptive text and action button.
+**Gaya visual** - Judul besar, menggunakan tipografi serif. - Kata
+`Story` diberi aksen biru muda dan gaya italic. - Konten teks rata
+kiri. - Foto latar diberi sedikit efek grayscale dan kontras. - Hero
+menggunakan tinggi yang dominan agar terasa sinematik.
 
+### C. Gallery Section
 
-## Do's and Don'ts
+**ID bagian:** `gallery`
 
-- No emojis in UI — use icon system only (Lucide, Heroicons)
-- No decorative gradients — flat color only
-- No shadows heavier than 0 2px 8px rgba(0,0,0,0.08)
-- No pure black (#000000) — use off-black or charcoal variants
-- No oversaturated accent colors (saturation cap: 80%)
-- No 3-column equal-width feature layouts — use zig-zag or asymmetric grid
-- No `h-screen` — use `min-h-[100dvh]`
-- No AI copywriting clichés: "Elevate", "Seamless", "Unleash", "Next-Gen"
-- No broken external image links — use picsum.photos or inline SVG
-- No generic lorem ipsum in demos
+**Tujuan:** Menampilkan dokumentasi foto dan video secara visual dan
+mudah dijelajahi.
 
-- Do Strong grid system
-- Do Sans-serif typography
-- Do Asymmetrical layout
-- Do Clean lines
-- Do Focus on negative space
-- Do Objective photography
+**Heading** - Label: `OUR GALLERY` - Judul: **Moments in Our Journey.**
 
+**Filter kategori** - All - Moments - Photos - Videos
 
-## Use Case
+**Layout galeri** - Grid asimetris dengan ukuran kartu bervariasi. -
+Beberapa kartu memanjang secara vertikal, sementara kartu lainnya
+melebar secara horizontal. - Setiap kartu menampilkan gambar sebagai
+fokus utama. - Overlay gradasi gelap di bagian bawah gambar. - Label
+kategori ditampilkan dalam badge kecil dengan latar transparan. - Efek
+hover: gambar membesar secara halus.
 
-Landing pages, SaaS
+**Aksi tambahan** - Tombol **View More** dengan ikon panah. - Tombol
+dapat digunakan untuk membuka lebih banyak dokumentasi.
 
-<!-- Source: https://designmd.app/library/swiss-design-grafico · designmd.app -->
+**Catatan implementasi** - Filter kategori perlu berfungsi, bukan hanya
+menjadi dekorasi. - Tombol View More perlu terhubung dengan mekanisme
+pemuatan data tambahan atau halaman galeri lengkap. - Gambar sebaiknya
+menggunakan aset asli website.
+
+### D. Our Story Section
+
+**ID bagian:** `story`
+
+**Tujuan:** Menceritakan perjalanan dan kedekatan pengguna website, bukan
+hanya menampilkan dokumentasi visual.
+
+**Elemen konten** - Foto latar berupa suasana kebersamaan atau perayaan
+kelulusan. - Overlay gelap agar teks tetap mudah dibaca. - Label:
+`OUR STORY`. - Judul: \> More Than Just a Class. - Paragraf: \> We came
+as strangers, grew as friends, and created memories that will stay with
+us long after the last day. Every laughter, challenge, and milestone
+made us family. - Tombol: **About Our Website** → menuju About. - Dekorasi
+tulisan tangan: \> Thank you for the memories
+
+**Layout** - Dua kolom pada layar besar. - Kolom kiri berisi judul,
+cerita, dan tombol. - Kolom kanan berisi tulisan dekoratif. - Pada layar
+kecil, kedua kolom ditumpuk secara vertikal.
+
+### E. Footer / About
+
+**ID bagian:** `about`
+
+**Tujuan:** Menutup halaman dengan identitas website, navigasi
+tambahan, dan tautan sosial.
+
+**Bagian kiri** - Logo/ikon Web 3. - Nama website sesuai identitas brand yang sudah ada.
+
+**Bagian tengah** - Home - Gallery - Videos - Our Website - About
+
+**Bagian kanan** - Tagline atau deskripsi singkat sesuai identitas Web 3.
+
+**Bagian bawah** - Copyright:
+`© [Tahun] [Nama Website]. All rights reserved.` - Ikon atau tautan: -
+YouTube - Instagram - External Link
+
+**Catatan implementasi** - Ganti tautan sosial placeholder dengan URL
+yang benar. - Hapus tautan yang belum digunakan atau arahkan ke tujuan
+yang sesuai.
+
+## 4. Alur Navigasi
+
+1.  Pengunjung membuka halaman pada Hero Section.
+2.  Pengunjung dapat memilih **Explore Memories** atau **Explore** untuk
+    menuju Gallery.
+3.  Pengunjung menjelajahi dokumentasi berdasarkan kategori.
+4.  Pengunjung dapat memilih **Watch Film** untuk menuju bagian Videos.
+5.  Pengunjung membaca informasi website pada Our Story.
+6.  Pengunjung melihat identitas dan tautan sosial pada Footer.
+
+## 5. Interaksi dan Animasi
+
+-   *Smooth scrolling* ketika navigasi diklik.
+-   Header tetap terlihat ketika halaman digulir.
+-   Warna navigasi berubah saat hover.
+-   Tombol memiliki transisi warna dan sedikit efek naik ketika hover.
+-   Gambar galeri memiliki efek zoom ringan ketika hover.
+-   Indikator scroll memiliki animasi gerak vertikal.
+-   Perubahan tema terang/gelap dapat digunakan jika fitur tersebut
+    memang disediakan; desain sumber menempatkan mode gelap sebagai tema
+    utama.
+
+## 6. Responsivitas
+
+-   **Desktop:** navigasi horizontal dan galeri grid asimetris.
+-   **Tablet:** ukuran heading, jarak, dan jumlah kolom disesuaikan.
+-   **Mobile:** navigasi desktop diganti menu mobile; konten menjadi
+    satu kolom; tombol dapat membungkus ke baris berikutnya; kartu
+    galeri disusun agar tetap mudah dibaca dan disentuh.
+-   Pastikan teks tetap terbaca di atas foto pada semua ukuran layar.
+
+## 7. Kebutuhan Konten dan Aset
+
+-   Logo atau ikon identitas Web 3.
+-   Visual utama/hero yang sesuai dengan brand Web 3.
+-   Aset gambar atau ilustrasi yang relevan dengan konten website.
+-   Video atau media pendukung jika tersedia.
+-   Deskripsi atau informasi utama website.
+-   Tautan Instagram, YouTube, dan tautan eksternal yang valid.
+
+## 8. Komponen yang Perlu Diimplementasikan
+
+-   [ ] Header dan navigasi anchor.
+-   [ ] Hero section dengan foto latar dan overlay.
+-   [ ] Tombol Explore Memories.
+-   [ ] Tombol Watch Film dan section Videos.
+-   [ ] Galeri foto/video.
+-   [ ] Filter kategori galeri yang berfungsi.
+-   [ ] Tombol View More atau halaman galeri lengkap.
+-   [ ] Section Our Story.
+-   [ ] Footer dengan tautan sosial.
+-   [ ] Tampilan responsif.
+-   [ ] Status hover, fokus keyboard, dan interaksi tombol.
+-   [ ] Optimasi ukuran gambar dan loading.
+-   [ ] Teks alternatif (`alt`) untuk gambar.
+
+## 9. Catatan Penting
+
+-   Navigasi **Videos** tersedia pada header dan footer, tetapi bagian
+    dengan ID `videos` belum tampak pada struktur sumber yang diberikan.
+    Bagian video perlu dibuat atau tautannya disesuaikan.
+-   Desain sumber menggunakan gambar contoh dari URL eksternal. Ganti
+    dengan aset asli agar sesuai dengan konten website.
+-   Pastikan semua tombol dan tautan mengarah ke tujuan yang benar.
+-   Pertahankan kontras warna yang cukup dan ukuran teks yang nyaman
+    dibaca.
+-   Jangan menggunakan identitas sekolah/angkatan. Pertahankan nama, logo, warna, dan konten brand Web 3 yang sudah ada di proyek.

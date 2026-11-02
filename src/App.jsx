@@ -2,7 +2,8 @@
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Gallery from './components/Gallery'
-import QuoteSection from './components/QuoteSection'
+import Videos from './components/Videos'
+import Story from './components/Story'
 import Footer from './components/Footer'
 import StatusToast from './components/StatusToast'
 import { useAuth } from './context/AuthContext'
@@ -20,6 +21,7 @@ export default function App() {
   const [uploadOpen, setUploadOpen] = useState(false)
   const [uploadMounted, setUploadMounted] = useState(false)
   const [notice, setNotice] = useState('')
+  const [galleryFilter, setGalleryFilter] = useState('semua')
 
   const dismissNotice = useCallback(() => setNotice(''), [])
 
@@ -37,6 +39,11 @@ export default function App() {
 
   const closeUpload = useCallback(() => setUploadOpen(false), [])
 
+  const showAllVideos = useCallback(() => {
+    setGalleryFilter('video')
+    document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [])
+
   function handleUploaded() {
     refresh()
     setNotice('Dokumentasi berhasil diunggah.')
@@ -48,10 +55,10 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-paper-soft">
+    <div className="min-h-[100dvh] bg-paper text-ink">
       <a
         href="#main-content"
-        className="fixed left-4 top-4 z-[600] -translate-y-24 rounded-lg bg-ink px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-transform duration-200 focus:translate-y-0 motion-reduce:transition-none"
+        className="fixed left-4 top-4 z-[600] -translate-y-24 rounded-full bg-soft px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-paper transition-transform duration-200 focus:translate-y-0 motion-reduce:transition-none"
       >
         Lewati ke konten
       </a>
@@ -59,80 +66,55 @@ export default function App() {
       <Navbar onLoginClick={openLogin} onUploadClick={openUpload} />
 
       <main id="main-content" tabIndex={-1} className="outline-none">
-        <Hero media={media} onUploadClick={openUpload} />
+        <Hero onUploadClick={openUpload} />
 
-        <section id="galeri" className="scroll-mt-16 bg-paper-soft py-16 sm:py-24">
-          <div className="mx-auto max-w-[1280px] px-6">
-            <div className="mb-10 grid gap-6 border-b border-ink pb-5 sm:items-end md:grid-cols-12">
-              <div className="md:col-span-7">
-                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
-                  02 - Galeri
+        <section
+          id="gallery"
+          aria-labelledby="gallery-title"
+          className="scroll-mt-20 border-t border-white/10 py-20 sm:py-28"
+        >
+          <div className="mx-auto max-w-[1280px] px-5 sm:px-8">
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.32em] text-accent-soft">
+                  <span aria-hidden="true" className="h-px w-8 bg-accent-soft/60" />
+                  Galeri kami
                 </p>
                 <h2
-                  id="galeri-title"
+                  id="gallery-title"
                   tabIndex={-1}
-                  className="mt-2 text-3xl font-bold uppercase tracking-tight sm:text-4xl"
+                  className="mt-4 max-w-[20ch] font-serif text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.05] tracking-[-0.015em] text-balance"
                 >
-                  Galeri kenangan
+                  Momen dalam perjalanan kita.
                 </h2>
-                <p className="mt-3 max-w-[52ch] text-sm leading-relaxed text-muted">
-                  Foto dan video kelas, diurutkan dari dokumentasi terbaru.
-                </p>
               </div>
 
-              <div className="flex flex-col gap-3 md:col-span-5 md:items-end md:text-right">
-                <nav
-                  aria-label="Navigasi bagian"
-                  className="flex flex-wrap items-center gap-x-2 font-mono text-[11px] uppercase tracking-[0.16em] text-muted"
-                >
-                  <a
-                    href="#beranda"
-                    className="inline-flex min-h-11 items-center transition-colors duration-200 hover:text-ink"
-                  >
-                    Beranda
-                  </a>
-                  <span aria-hidden="true" className="text-cool">
-                    /
-                  </span>
-                  <a
-                    href="#galeri"
-                    aria-current="location"
-                    className="inline-flex min-h-11 items-center text-signal"
-                  >
-                    Galeri
-                  </a>
-                  <span aria-hidden="true" className="text-cool">
-                    /
-                  </span>
-                  <a
-                    href="#tentang"
-                    className="inline-flex min-h-11 items-center transition-colors duration-200 hover:text-ink"
-                  >
-                    Tentang
-                  </a>
-                </nav>
-
-                <p className="max-w-[38ch] text-sm leading-relaxed text-muted">
-                  {isAdmin
-                    ? 'Kamu masuk sebagai admin. Unggah atau hapus dokumentasi lewat tombol di setiap kartu.'
-                    : 'Publik bisa melihat seluruh arsip. Unggah dan hapus khusus admin.'}
-                </p>
-              </div>
+              <p className="max-w-[38ch] text-sm leading-relaxed text-muted sm:text-right">
+                {isAdmin
+                  ? 'Kamu masuk sebagai admin. Unggah atau hapus dokumentasi lewat tombol di navigasi dan setiap kartu.'
+                  : 'Foto dan video kelas, diurutkan dari dokumentasi terbaru. Unggah dan hapus khusus admin.'}
+              </p>
             </div>
 
-            <Gallery
-              media={media}
-              loading={loading}
-              error={error}
-              isAdmin={isAdmin}
-              onDeleted={handleDeleted}
-              onUploadClick={openUpload}
-              onRetry={refresh}
-            />
+            <div className="mt-10">
+              <Gallery
+                media={media}
+                loading={loading}
+                error={error}
+                isAdmin={isAdmin}
+                onDeleted={handleDeleted}
+                onUploadClick={openUpload}
+                onRetry={refresh}
+                filter={galleryFilter}
+                onFilterChange={setGalleryFilter}
+              />
+            </div>
           </div>
         </section>
 
-        <QuoteSection />
+        <Videos media={media} loading={loading} onShowAll={showAllVideos} />
+
+        <Story />
       </main>
 
       <Footer />
@@ -148,4 +130,3 @@ export default function App() {
     </div>
   )
 }
-

@@ -1,6 +1,6 @@
 ﻿import { useState } from 'react'
 import { ImageOff, Play } from 'lucide-react'
-import { getPublicUrl } from '../lib/supabase'
+import { getPublicUrl } from '../lib/supabaseConfig'
 
 export default function MediaThumbnail({ item, priority = false }) {
   const [failed, setFailed] = useState(false)

@@ -1,5 +1,4 @@
 ﻿import { useEffect, useId, useRef } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
 import { X } from 'lucide-react'
 
 export default function Modal({ open, onClose, title, children, wide = false }) {
@@ -70,52 +69,40 @@ export default function Modal({ open, onClose, title, children, wide = false }) 
     }
   }, [open])
 
+  if (!open) return null
+
   return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          className="fixed inset-0 z-[300] flex items-center justify-center p-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-        >
-          <div
-            className="absolute inset-0 bg-ink/60"
+    <div className="fixed inset-0 z-[300] flex animate-fade-in items-center justify-center p-4">
+      <div
+        className="absolute inset-0 bg-black/75 backdrop-blur-sm"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        tabIndex={-1}
+        className={`relative max-h-[90vh] w-full animate-dialog-in overflow-y-auto rounded-2xl border border-white/10 bg-paper p-6 shadow-card outline-none ${
+          wide ? 'max-w-3xl' : 'max-w-md'
+        }`}
+      >
+        <div className="mb-5 flex items-start justify-between gap-4">
+          <h2 id={titleId} className="font-serif text-xl leading-tight tracking-[-0.01em]">
+            {title}
+          </h2>
+          <button
+            type="button"
             onClick={onClose}
-            aria-hidden="true"
-          />
-          <motion.div
-            ref={panelRef}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={titleId}
-            tabIndex={-1}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 16 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            className={`relative max-h-[90vh] w-full overflow-y-auto rounded-lg border border-line bg-paper p-6 shadow-[0_2px_12px_rgba(0,0,0,0.08)] outline-none ${
-              wide ? 'max-w-3xl' : 'max-w-md'
-            }`}
+            className="grid size-11 shrink-0 place-items-center rounded-full border border-white/10 text-muted transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-paper"
+            aria-label="Tutup"
           >
-            <div className="mb-5 flex items-start justify-between gap-4">
-              <h2 id={titleId} className="text-lg font-bold uppercase tracking-[0.02em]">
-                {title}
-              </h2>
-              <button
-                type="button"
-                onClick={onClose}
-                className="grid size-11 shrink-0 place-items-center rounded-lg border border-line text-muted transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-white"
-                aria-label="Tutup"
-              >
-                <X className="size-4" aria-hidden="true" />
-              </button>
-            </div>
-            {children}
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+            <X className="size-4" aria-hidden="true" />
+          </button>
+        </div>
+        {children}
+      </div>
+    </div>
   )
 }

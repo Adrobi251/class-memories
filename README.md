@@ -39,12 +39,27 @@ Landing page dokumentasi foto & video kelas, dengan upload khusus admin.
 
 ## Fitur
 
-- Galeri publik foto & video
+- Hero sinematik dengan foto kelas
+- Galeri publik foto & video dengan filter Semua / Momen / Foto / Video
+- Tombol "Lihat Lebih Banyak" untuk memuat dokumentasi berikutnya
+- Section Video dan section cerita (Our Story)
 - Preview foto/video dalam modal
 - Login admin via Supabase Auth
 - Upload foto/video + thumbnail video (admin only)
 - Hapus dokumentasi (admin only)
 - Row Level Security: publik hanya bisa baca
+
+## Aset gambar
+
+Foto hero dan story diambil dari folder `images/`, lalu dioptimasi menjadi WebP
+di `public/images/` supaya halaman tetap ringan:
+
+```bash
+npm run images
+```
+
+Jalankan ulang perintah ini setiap kali mengganti foto di folder `images/`.
+Nama file sumber yang dipakai ada di `scripts/optimize-images.mjs`.
 
 ## Deploy ke Vercel
 

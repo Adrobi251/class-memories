@@ -4,7 +4,7 @@ import Modal from './Modal'
 import { useAuth } from '../context/AuthContext'
 
 const inputClass =
-  'w-full rounded-lg border border-line bg-paper px-3 py-2.5 text-sm text-ink placeholder:text-muted transition-colors duration-200 focus:border-signal'
+  'w-full rounded-xl border border-line bg-paper px-3 py-2.5 text-sm text-ink placeholder:text-muted transition-colors duration-200 focus:border-signal'
 
 const labelClass = 'mb-1.5 block font-mono text-[11px] uppercase tracking-[0.16em] text-muted'
 
@@ -36,7 +36,7 @@ export default function AdminLoginModal({ open, onClose }) {
     <Modal open={open} onClose={onClose} title="Login Admin">
       <form onSubmit={handleSubmit} className="space-y-4">
         <p className="flex items-start gap-2 border-l-2 border-signal bg-paper-soft px-3 py-2 text-sm text-muted">
-          <Lock className="mt-0.5 size-4 shrink-0 text-signal" aria-hidden="true" />
+          <Lock className="mt-0.5 size-4 shrink-0 text-signal-bright" aria-hidden="true" />
           Hanya admin kelas yang bisa mengunggah dokumentasi.
         </p>
 
@@ -69,7 +69,7 @@ export default function AdminLoginModal({ open, onClose }) {
         {error && (
           <p
             role="alert"
-            className="rounded-lg border border-signal bg-paper px-3 py-2 text-sm text-signal"
+            className="rounded-lg border border-signal-bright/60 bg-signal/10 px-3 py-2 text-sm text-signal-bright"
           >
             {error}
           </p>

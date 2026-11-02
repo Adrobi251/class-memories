@@ -1,18 +1,13 @@
 ﻿import { useEffect, useRef, useState } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
-import { LogOut, Menu, Upload, X } from 'lucide-react'
+import { Images, LogOut, Menu, Upload, X } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
-
-const NAV_LINKS = [
-  { label: 'Beranda', href: '#beranda', id: 'beranda' },
-  { label: 'Galeri', href: '#galeri', id: 'galeri' },
-  { label: 'Tentang', href: '#tentang', id: 'tentang' },
-]
+import { NAV_LINKS, site } from '../lib/site'
 
 export default function Navbar({ onLoginClick, onUploadClick }) {
   const { isAdmin, signOut } = useAuth()
   const [open, setOpen] = useState(false)
-  const [active, setActive] = useState('beranda')
+  const [active, setActive] = useState('home')
+  const [scrolled, setScrolled] = useState(false)
   const toggleRef = useRef(null)
 
   useEffect(() => {
@@ -25,11 +20,21 @@ export default function Navbar({ onLoginClick, onUploadClick }) {
           if (entry.isIntersecting) setActive(entry.target.id)
         })
       },
-      { rootMargin: '-40% 0px -55% 0px' },
+      { rootMargin: '-45% 0px -50% 0px' },
     )
 
     sections.forEach((section) => observer.observe(section))
     return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > 16)
+    }
+
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   useEffect(() => {
@@ -50,7 +55,7 @@ export default function Navbar({ onLoginClick, onUploadClick }) {
     document.body.style.overflow = 'hidden'
 
     function onResize() {
-      if (window.innerWidth >= 768) setOpen(false)
+      if (window.innerWidth >= 1024) setOpen(false)
     }
 
     window.addEventListener('resize', onResize)
@@ -64,123 +69,136 @@ export default function Navbar({ onLoginClick, onUploadClick }) {
     setOpen(false)
   }
 
+  const adminButtonClass =
+    'grid size-11 place-items-center rounded-full border border-line text-muted transition-colors duration-200 hover:border-accent-soft hover:text-ink'
+
   return (
     <>
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={close}
-            aria-hidden="true"
-            className="fixed inset-0 z-[90] bg-ink/40 md:hidden"
-          />
-        )}
-      </AnimatePresence>
+      {open && (
+        <div
+          onClick={close}
+          aria-hidden="true"
+          className="fixed inset-0 z-[90] animate-fade-in bg-black/60 backdrop-blur-sm lg:hidden"
+        />
+      )}
 
-      <header className="fixed inset-x-0 top-0 z-[100] border-b border-line bg-paper">
-        <nav className="mx-auto flex h-16 max-w-[1280px] items-center justify-between px-6">
+      <header
+        className={`fixed inset-x-0 top-0 z-[100] border-b transition-colors duration-300 ${
+          scrolled
+            ? 'border-white/10 bg-paper/80 backdrop-blur-xl'
+            : 'border-transparent bg-paper/55 backdrop-blur-md'
+        }`}
+      >
+        <nav className="mx-auto flex h-[72px] max-w-[1280px] items-center justify-between gap-3 px-4 sm:gap-4 sm:px-8">
           <a
-            href="#beranda"
-            aria-label="Class Memories Web 3 - Beranda"
-            className="flex min-h-11 items-center gap-3"
-            onClick={() => setActive('beranda')}
+            href="#home"
+            aria-label={`${site.name} - Beranda`}
+            className="flex min-h-11 min-w-0 items-center gap-2.5 sm:gap-3"
+            onClick={() => setActive('home')}
           >
-            <span className="grid size-9 place-items-center rounded-lg bg-signal font-mono text-[11px] font-medium tracking-[0.12em] text-white">
-              CM
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-signal font-sans text-[13px] font-bold tracking-[0.08em] text-white">
+              {site.mark}
             </span>
-            <span className="hidden sm:block">
-              <span className="block whitespace-nowrap text-sm font-bold uppercase tracking-[0.18em]">
-                Class Memories Web 3
+            <span className="block min-w-0">
+              <span className="hidden whitespace-nowrap text-sm font-bold uppercase leading-tight tracking-[0.16em] sm:block">
+                {site.name}
               </span>
-              <span className="mt-0.5 block font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
-                Arsip kelas / 2026
+              <span className="block whitespace-nowrap text-[11px] font-bold uppercase leading-tight tracking-[0.1em] sm:hidden">
+                {site.shortName}
               </span>
-            </span>
-            <span className="sm:hidden">
-              <span className="block whitespace-nowrap text-[13px] font-bold uppercase leading-tight tracking-[0.12em]">
-                Class Memories
-              </span>
-              <span className="mt-0.5 block font-mono text-[10px] uppercase leading-tight tracking-[0.16em] text-muted">
-                Web 3
+              <span className="mt-0.5 block text-[10px] uppercase leading-tight tracking-[0.2em] text-muted sm:tracking-[0.28em]">
+                {site.subtitle}
               </span>
             </span>
           </a>
 
-          <div className="hidden items-center gap-8 md:flex">
-            <div className="flex items-center gap-6">
-              {NAV_LINKS.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  aria-current={active === link.id ? 'location' : undefined}
-                  className={`border-b-2 pb-1 font-mono text-[11px] uppercase tracking-[0.14em] transition-colors duration-200 ${
-                    active === link.id
-                      ? 'border-signal text-signal'
-                      : 'border-transparent text-muted hover:text-ink'
+          <div className="hidden items-center gap-7 lg:flex">
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                aria-current={active === link.id ? 'location' : undefined}
+                className={`relative py-2 text-[11px] font-semibold uppercase tracking-[0.2em] transition-colors duration-200 ${
+                  active === link.id
+                    ? 'text-accent-soft'
+                    : 'text-ink/60 hover:text-ink'
+                }`}
+              >
+                {link.label}
+                <span
+                  aria-hidden="true"
+                  className={`absolute inset-x-0 -bottom-0.5 h-px bg-accent-soft transition-opacity duration-200 ${
+                    active === link.id ? 'opacity-100' : 'opacity-0'
                   }`}
-                >
-                  {link.label}
-                </a>
-              ))}
-            </div>
+                />
+              </a>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <a
+              href="#gallery"
+              className="inline-flex min-h-11 items-center gap-2 rounded-full bg-signal px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-signal-bright active:translate-y-0 sm:px-5"
+            >
+              <Images className="size-4" aria-hidden="true" />
+              <span className="hidden sm:inline">Jelajahi</span>
+            </a>
+
+            <span aria-hidden="true" className="mx-1 hidden h-6 w-px bg-line sm:block" />
 
             {isAdmin ? (
-              <div className="flex items-center gap-2">
+              <div className="hidden items-center gap-2 lg:flex">
                 <button
                   type="button"
                   onClick={onUploadClick}
-                  className="flex min-h-11 items-center gap-2 rounded-lg bg-signal px-4 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-signal-dark active:translate-y-0"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-full border border-accent-soft/60 px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-accent-soft transition-colors duration-200 hover:border-accent-soft hover:bg-accent-soft hover:text-paper"
                 >
-                  <Upload className="size-3.5" aria-hidden="true" />
+                  <Upload className="size-4" aria-hidden="true" />
                   Upload
                 </button>
                 <button
                   type="button"
                   onClick={() => signOut()}
-                  className="flex min-h-11 items-center gap-2 rounded-lg border-[1.5px] border-line px-4 text-xs font-semibold uppercase tracking-[0.1em] text-ink transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-white"
+                  aria-label="Keluar dari akun admin"
+                  className={adminButtonClass}
                 >
-                  <LogOut className="size-3.5" aria-hidden="true" />
-                  Keluar
+                  <LogOut className="size-4" aria-hidden="true" />
                 </button>
               </div>
             ) : (
               <button
                 type="button"
                 onClick={onLoginClick}
-                className="min-h-11 rounded-lg bg-signal px-4 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-signal-dark active:translate-y-0"
+                className="hidden min-h-11 items-center rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink/45 transition-colors duration-200 hover:text-ink lg:inline-flex"
               >
                 Login Admin
               </button>
             )}
-          </div>
 
-          <button
-            ref={toggleRef}
-            type="button"
-            className="grid size-11 place-items-center rounded-lg border border-line md:hidden"
-            onClick={() => setOpen((v) => !v)}
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-            aria-label={open ? 'Tutup menu' : 'Buka menu'}
-          >
-            {open ? <X className="size-5" aria-hidden="true" /> : <Menu className="size-5" aria-hidden="true" />}
-          </button>
+            <button
+              ref={toggleRef}
+              type="button"
+              className="grid size-11 place-items-center rounded-full border border-line text-ink lg:hidden"
+              onClick={() => setOpen((v) => !v)}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+              aria-label={open ? 'Tutup menu' : 'Buka menu'}
+            >
+              {open ? (
+                <X className="size-5" aria-hidden="true" />
+              ) : (
+                <Menu className="size-5" aria-hidden="true" />
+              )}
+            </button>
+          </div>
         </nav>
 
-        <AnimatePresence>
-          {open && (
-            <motion.div
-              id="mobile-menu"
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.2, ease: 'easeOut' }}
-              className="border-t border-line bg-paper px-6 py-5 md:hidden"
-            >
-              <div className="flex flex-col gap-2">
+        {open && (
+          <div
+            id="mobile-menu"
+            className="animate-menu-in border-t border-white/10 bg-paper/95 px-5 py-6 backdrop-blur-xl sm:px-8 lg:hidden"
+          >
+              <div className="flex flex-col">
                 {NAV_LINKS.map((link) => (
                   <a
                     key={link.href}
@@ -190,16 +208,21 @@ export default function Navbar({ onLoginClick, onUploadClick }) {
                       close()
                     }}
                     aria-current={active === link.id ? 'location' : undefined}
-                    className={`flex min-h-11 items-center font-mono text-[11px] uppercase tracking-[0.14em] ${
-                      active === link.id ? 'text-signal' : 'text-muted'
+                    className={`flex min-h-12 items-center justify-between border-b border-line/60 text-sm font-semibold uppercase tracking-[0.18em] ${
+                      active === link.id ? 'text-accent-soft' : 'text-ink/70'
                     }`}
                   >
                     {link.label}
+                    <span className="text-[10px] tracking-[0.2em] text-muted">
+                      {String(NAV_LINKS.indexOf(link) + 1).padStart(2, '0')}
+                    </span>
                   </a>
                 ))}
+              </div>
 
+              <div className="mt-5 flex flex-col gap-2">
                 {isAdmin ? (
-                  <div className="mt-2 flex flex-col gap-2 border-t border-line pt-4">
+                  <>
                     <button
                       type="button"
                       onClick={() => {
@@ -207,10 +230,10 @@ export default function Navbar({ onLoginClick, onUploadClick }) {
                         toggleRef.current?.focus()
                         onUploadClick()
                       }}
-                      className="flex min-h-11 items-center justify-center gap-2 rounded-lg bg-signal px-4 text-xs font-semibold uppercase tracking-[0.1em] text-white"
+                      className="flex min-h-11 items-center justify-center gap-2 rounded-full bg-signal px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-white"
                     >
                       <Upload className="size-4" aria-hidden="true" />
-                      Upload
+                      Upload dokumentasi
                     </button>
                     <button
                       type="button"
@@ -219,12 +242,12 @@ export default function Navbar({ onLoginClick, onUploadClick }) {
                         toggleRef.current?.focus()
                         signOut()
                       }}
-                      className="flex min-h-11 items-center justify-center gap-2 rounded-lg border-[1.5px] border-line px-4 text-xs font-semibold uppercase tracking-[0.1em]"
+                      className="flex min-h-11 items-center justify-center gap-2 rounded-full border border-line px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink"
                     >
                       <LogOut className="size-4" aria-hidden="true" />
                       Keluar
                     </button>
-                  </div>
+                  </>
                 ) : (
                   <button
                     type="button"
@@ -233,15 +256,14 @@ export default function Navbar({ onLoginClick, onUploadClick }) {
                       toggleRef.current?.focus()
                       onLoginClick()
                     }}
-                    className="mt-2 flex min-h-11 items-center justify-center rounded-lg bg-signal px-4 text-xs font-semibold uppercase tracking-[0.1em] text-white"
+                    className="flex min-h-11 items-center justify-center rounded-full border border-line px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink"
                   >
                     Login Admin
                   </button>
                 )}
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+          </div>
+        )}
       </header>
     </>
   )

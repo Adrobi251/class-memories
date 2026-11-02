@@ -168,7 +168,7 @@ export default function VideoPosterPicker({ file, onSelect, disabled = false }) 
         </p>
       </div>
 
-      <div className="relative mt-2 aspect-video w-full overflow-hidden rounded-lg bg-ink">
+      <div className="relative mt-2 aspect-video w-full overflow-hidden rounded-lg bg-black">
         <video
             ref={videoRef}
             muted
@@ -190,12 +190,12 @@ export default function VideoPosterPicker({ file, onSelect, disabled = false }) 
           </p>
         ) : (
           ready && (
-            <span className="pointer-events-none absolute inset-0 grid place-items-center bg-ink/20">
+            <span className="pointer-events-none absolute inset-0 grid place-items-center bg-black/20">
               <button
                 type="button"
                 onClick={togglePlay}
                 aria-label={playing ? 'Jeda video' : 'Putar video'}
-                className="pointer-events-auto grid size-11 place-items-center rounded-full bg-ink/80 text-white transition-colors duration-200 hover:bg-signal focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                className="pointer-events-auto grid size-11 place-items-center rounded-full bg-black/60 text-white transition-colors duration-200 hover:bg-signal focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
                 {playing ? (
                   <Pause className="size-4 fill-white" aria-hidden="true" />
@@ -254,7 +254,7 @@ export default function VideoPosterPicker({ file, onSelect, disabled = false }) 
           onClick={confirmFrame}
           disabled={!ready || failed || disabled || busy}
           aria-busy={busy}
-          className="min-h-11 w-full shrink-0 rounded-lg border border-ink px-3 font-mono text-[11px] uppercase tracking-[0.12em] text-ink transition-colors duration-200 hover:bg-ink hover:text-white disabled:opacity-50 sm:w-auto"
+          className="min-h-11 w-full shrink-0 rounded-lg border border-ink px-3 font-mono text-[11px] uppercase tracking-[0.12em] text-ink transition-colors duration-200 hover:bg-ink hover:text-paper disabled:opacity-50 sm:w-auto"
         >
           {busy ? 'Menyiapkan...' : isSelected ? 'Terpilih' : 'Gunakan frame'}
         </button>

@@ -1,5 +1,11 @@
 ﻿import { useCallback, useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
+import {
+  SUPABASE_ANON_KEY,
+  SUPABASE_URL,
+  hasSupabaseConfig,
+} from '../lib/supabaseConfig'
+
+const MEDIA_ENDPOINT = `${SUPABASE_URL}/rest/v1/media?select=*&order=created_at.desc&limit=500`
 
 export function useMedia() {
   const [media, setMedia] = useState([])
@@ -8,18 +14,38 @@ export function useMedia() {
 
   const refresh = useCallback(async () => {
     setLoading(true)
-    const { data, error: fetchError } = await supabase
-      .from('media')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(500)
 
-    if (fetchError) setError(fetchError)
-    else {
+    try {
+      if (!hasSupabaseConfig) {
+        throw new Error(
+          'Missing Supabase env vars. Copy .env.example to .env and fill in VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.',
+        )
+      }
+
+      // Public read through the REST endpoint: same RLS rules as the SDK, but
+      // keeps @supabase/supabase-js out of the initial JS bundle.
+      const response = await fetch(MEDIA_ENDPOINT, {
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+      })
+
+      if (!response.ok) {
+        const payload = await response.json().catch(() => null)
+        throw new Error(
+          payload?.message ?? `Galeri gagal dimuat (HTTP ${response.status}).`,
+        )
+      }
+
+      const data = await response.json()
       setError(null)
-      setMedia(data ?? [])
+      setMedia(Array.isArray(data) ? data : [])
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Galeri gagal dimuat.'))
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }, [])
 
   useEffect(() => {
@@ -28,4 +54,3 @@ export function useMedia() {
 
   return { media, loading, error, refresh }
 }
-

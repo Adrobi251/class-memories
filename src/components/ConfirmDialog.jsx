@@ -1,4 +1,4 @@
-import { AlertTriangle, Trash2 } from 'lucide-react'
+﻿import { AlertTriangle, Trash2 } from 'lucide-react'
 import Modal from './Modal'
 
 const TYPE_LABEL = {
@@ -11,12 +11,12 @@ export default function ConfirmDialog({ open, item, busy, error, onClose, onConf
     <Modal open={open} onClose={onClose} title="Hapus dokumentasi?">
       <div className="space-y-4">
         <p className="flex items-start gap-2 border-l-2 border-signal bg-paper-soft px-3 py-2 text-sm text-muted">
-          <AlertTriangle className="mt-0.5 size-4 shrink-0 text-signal" aria-hidden="true" />
+          <AlertTriangle className="mt-0.5 size-4 shrink-0 text-signal-bright" aria-hidden="true" />
           Tindakan ini permanen. File dan data dokumentasi akan dihapus dari arsip.
         </p>
 
         {item && (
-          <div className="rounded-lg border border-line bg-paper px-4 py-3">
+          <div className="rounded-xl border border-line bg-paper px-4 py-3">
             <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
               {TYPE_LABEL[item.media_type] ?? 'Media'}
             </p>
@@ -27,7 +27,7 @@ export default function ConfirmDialog({ open, item, busy, error, onClose, onConf
         {error && (
           <p
             role="alert"
-            className="rounded-lg border border-signal bg-paper px-3 py-2 text-sm text-signal"
+            className="rounded-lg border border-signal-bright/60 bg-signal/10 px-3 py-2 text-sm text-signal-bright"
           >
             {error}
           </p>
@@ -38,7 +38,7 @@ export default function ConfirmDialog({ open, item, busy, error, onClose, onConf
             type="button"
             onClick={onClose}
             disabled={busy}
-            className="min-h-11 rounded-lg border-[1.5px] border-line px-5 text-xs font-semibold uppercase tracking-[0.1em] text-ink transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-white disabled:opacity-60"
+            className="min-h-11 rounded-full border-[1.5px] border-line px-5 text-xs font-semibold uppercase tracking-[0.1em] text-ink transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-paper disabled:opacity-60"
           >
             Batal
           </button>
@@ -47,7 +47,7 @@ export default function ConfirmDialog({ open, item, busy, error, onClose, onConf
             onClick={onConfirm}
             disabled={busy}
             aria-busy={busy}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-signal px-5 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-colors duration-200 hover:bg-signal-dark disabled:opacity-60"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-signal px-5 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-colors duration-200 hover:bg-signal-dark disabled:opacity-60"
           >
             <Trash2 className="size-4" aria-hidden="true" />
             {busy ? 'Menghapus...' : 'Hapus permanen'}

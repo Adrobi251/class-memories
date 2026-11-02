@@ -18,9 +18,9 @@ export default function MediaTypeToggle({ value, onChange }) {
             type="button"
             onClick={() => onChange(optionValue)}
             aria-pressed={value === optionValue}
-            className={`flex min-h-11 items-center justify-center gap-2 rounded-lg border px-3 text-xs font-semibold uppercase tracking-[0.1em] transition-colors duration-200 ${
+            className={`flex min-h-11 items-center justify-center gap-2 rounded-xl border px-3 text-xs font-semibold uppercase tracking-[0.1em] transition-colors duration-200 ${
               value === optionValue
-                ? 'border-ink bg-ink text-white'
+                ? 'border-ink bg-ink text-paper'
                 : 'border-line bg-paper text-muted hover:border-ink hover:text-ink'
             }`}
           >

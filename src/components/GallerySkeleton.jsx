@@ -16,13 +16,9 @@ export default function GallerySkeleton() {
         return (
           <div
             key={index}
-            className={`${span} overflow-hidden rounded-lg border border-line bg-paper`}
+            className={`${span} overflow-hidden rounded-2xl border border-white/10 bg-paper-soft`}
           >
             <div className={`skeleton w-full ${ratio}`} />
-            <div className="border-t border-line px-4 py-3">
-              <div className="skeleton h-2.5 w-20" />
-              <div className="skeleton mt-2 h-4 w-3/4" />
-            </div>
           </div>
         )
       })}

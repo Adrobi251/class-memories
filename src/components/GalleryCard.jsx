@@ -1,5 +1,4 @@
-﻿import { motion } from 'motion/react'
-import { ArrowUpRight, Play, Trash2 } from 'lucide-react'
+﻿import { Play, Trash2 } from 'lucide-react'
 import MediaThumbnail from './MediaThumbnail'
 import { galleryLayout } from '../lib/galleryLayout'
 
@@ -11,49 +10,57 @@ function formatDate(value) {
   })
 }
 
+const TYPE_LABEL = { foto: 'Foto', video: 'Video' }
+
 export default function GalleryCard({ item, index, isAdmin, deleting, onOpen, onDelete }) {
   const { span, ratio } = galleryLayout(index)
 
   return (
-    <motion.article
-      layout
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.98 }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
-      className={`${span} group relative self-start overflow-hidden rounded-lg border border-line bg-paper shadow-card transition-transform duration-200 hover:-translate-y-0.5`}
+    <article
+      className={`${span} group relative animate-card-in self-start overflow-hidden rounded-2xl border border-white/10 bg-paper-soft`}
     >
       <button
         type="button"
         onClick={() => onOpen(item)}
-        className="block w-full text-left"
+        className="relative block w-full text-left focus-visible:outline-offset-4"
         aria-label={`Buka ${item.media_type}: ${item.title}`}
         aria-haspopup="dialog"
       >
         <span className={`relative block w-full overflow-hidden ${ratio}`}>
-          <MediaThumbnail item={item} />
+          <span className="absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-[1.05] motion-reduce:transition-none motion-reduce:group-hover:scale-100">
+            <MediaThumbnail item={item} />
+          </span>
+
+          <span aria-hidden="true" className="photo-scrim absolute inset-0" />
+
+          <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/35 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white backdrop-blur-md">
+            {item.media_type === 'video' && (
+              <Play className="size-2.5 fill-current" aria-hidden="true" />
+            )}
+            {TYPE_LABEL[item.media_type] ?? 'Media'}
+          </span>
+
           {item.media_type === 'video' && (
-            <span className="absolute inset-0 grid place-items-center">
-              <span className="grid size-12 place-items-center rounded-lg bg-signal transition-transform duration-200 group-hover:scale-105">
+            <span className="pointer-events-none absolute inset-0 grid place-items-center">
+              <span className="grid size-14 place-items-center rounded-full border border-white/40 bg-white/15 backdrop-blur-md transition-transform duration-300 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100">
                 <Play className="ml-0.5 size-5 fill-white text-white" aria-hidden="true" />
               </span>
             </span>
           )}
-        </span>
 
-        <span className="flex items-center justify-between gap-3 border-t border-line px-4 py-3">
-          <span className="min-w-0">
-            <span className="block font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
-              {item.media_type === 'video' ? 'Video' : 'Foto'} / {formatDate(item.created_at)}
-            </span>
-            <span className="mt-1 block truncate text-sm font-semibold" title={item.title}>
-              {item.title}
+          <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4">
+            <span className="min-w-0">
+              <span className="block text-[10px] uppercase tracking-[0.22em] text-white/60">
+                {formatDate(item.created_at)}
+              </span>
+              <span
+                className="mt-1 block truncate text-sm font-semibold text-white sm:text-base"
+                title={item.title}
+              >
+                {item.title}
+              </span>
             </span>
           </span>
-          <ArrowUpRight
-            className="size-4 shrink-0 text-muted transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-            aria-hidden="true"
-          />
         </span>
       </button>
 
@@ -65,15 +72,15 @@ export default function GalleryCard({ item, index, isAdmin, deleting, onOpen, on
           aria-label={`Hapus ${item.title}`}
           aria-haspopup="dialog"
           aria-busy={deleting}
-          className="absolute right-2 top-2 z-10 grid size-11 place-items-center rounded-lg border border-line bg-paper text-ink transition-colors duration-200 hover:border-signal hover:bg-signal hover:text-white disabled:opacity-60"
+          className="absolute right-3 top-3 z-10 grid size-11 place-items-center rounded-full border border-white/25 bg-black/40 text-white backdrop-blur-md transition-colors duration-200 hover:border-signal hover:bg-signal disabled:opacity-60"
         >
           {deleting ? (
-            <span className="block size-3 animate-pulse bg-signal" aria-hidden="true" />
+            <span className="block size-3 animate-pulse bg-white" aria-hidden="true" />
           ) : (
             <Trash2 className="size-4" aria-hidden="true" />
           )}
         </button>
       )}
-    </motion.article>
+    </article>
   )
 }
