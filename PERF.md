@@ -63,3 +63,11 @@ at 1.6 Mbps they need ~50 s of transfer. Fixing that needs the objects re-upload
 The three existing objects predate the compression pipeline (~10 MB total, `no-cache`) and must be
 re-uploaded through the admin UI (or replaced by a script with a service-role key) before the slow-profile
 numbers improve.
+
+## Follow-up
+
+- Photos are now always re-encoded to WebP; the old 400 kB skip threshold is gone. The only bail-out left is
+  "keep the original if the WebP would be larger" (never inflate). Verified: 773 kB PNG -> 212 kB WebP,
+  alpha preserved, 4000x3000 -> 1920x1440.
+- Video uploads extract a poster frame client-side (`src/lib/video.js`, 1280 px WebP q0.72, 8 s timeout) when
+  the admin does not provide a thumbnail. Unsupported codecs resolve to `null` and the upload continues.
