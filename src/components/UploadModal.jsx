@@ -89,10 +89,16 @@ export default function UploadModal({ open, onClose, onUploaded }) {
 
       if (type === 'foto') {
         setStage('compressing')
-        const prepared = await preparePhoto(file)
-        mainBody = prepared.main
-        thumbnailBody = prepared.thumbnail
-        if (prepared.type) mainName = safeName(replaceExtension(file.name, prepared.type))
+        try {
+          const prepared = await preparePhoto(file)
+          mainBody = prepared.main
+          thumbnailBody = prepared.thumbnail
+          if (prepared.type) mainName = safeName(replaceExtension(file.name, prepared.type))
+        } catch {
+          // Compression is an optimization: an unsupported format still uploads as-is.
+          mainBody = file
+          thumbnailBody = null
+        }
       } else if (thumbnail) {
         thumbnailBody = thumbnail
       }
@@ -214,3 +220,4 @@ export default function UploadModal({ open, onClose, onUploaded }) {
     </Modal>
   )
 }
+
