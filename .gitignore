@@ -34,3 +34,5 @@ __pycache__/
 
 # Local AI skills (not part of the project)
 .opencode/
+# Local performance notes
+PERF.md
