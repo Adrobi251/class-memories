@@ -19,6 +19,7 @@ export default function FileDropzone({
   onChange,
 }) {
   const [dragging, setDragging] = useState(false)
+  const [brokenPreview, setBrokenPreview] = useState('')
   const [dropError, setDropError] = useState('')
 
   const preview = useMemo(() => {
@@ -83,11 +84,12 @@ export default function FileDropzone({
       {file ? (
         <div className="flex items-center gap-3 px-3 py-3">
           <label htmlFor={id} className="flex min-w-0 flex-1 cursor-pointer items-center gap-3">
-            {isImage && preview ? (
+            {isImage && preview && brokenPreview !== preview ? (
               <img
                 src={preview}
                 alt=""
                 className="size-14 shrink-0 rounded-lg border border-line object-cover"
+                onError={() => setBrokenPreview(preview)}
               />
             ) : (
               <span className="grid size-14 shrink-0 place-items-center rounded-lg bg-paper text-muted">
@@ -158,3 +160,4 @@ export default function FileDropzone({
     </div>
   )
 }
+

@@ -2,7 +2,6 @@
 const THUMB_EDGE = 800
 const MAIN_QUALITY = 0.82
 const THUMB_QUALITY = 0.72
-const SKIP_BYTES = 400 * 1024
 
 function canEncode(type) {
   const canvas = document.createElement('canvas')
@@ -11,7 +10,9 @@ function canEncode(type) {
   return canvas.toDataURL(type).startsWith(`data:${type}`)
 }
 
-const OUTPUT_TYPE = () => (canEncode('image/webp') ? 'image/webp' : 'image/jpeg')
+export const preferredImageType = () => (canEncode('image/webp') ? 'image/webp' : 'image/jpeg')
+
+const OUTPUT_TYPE = preferredImageType
 
 async function decode(file) {
   if (typeof createImageBitmap === 'function') {
@@ -46,11 +47,18 @@ function render(source, maxEdge, quality) {
   canvas.height = targetH
   const context = canvas.getContext('2d')
   if (!context) throw new Error('Canvas tidak tersedia.')
+
+  const type = OUTPUT_TYPE()
+  if (type === 'image/jpeg') {
+    // JPEG has no alpha channel: paint white so transparent PNGs do not turn black.
+    context.fillStyle = '#ffffff'
+    context.fillRect(0, 0, targetW, targetH)
+  }
+
   context.imageSmoothingEnabled = true
   context.imageSmoothingQuality = 'high'
   context.drawImage(source, 0, 0, targetW, targetH)
 
-  const type = OUTPUT_TYPE()
   return new Promise((resolve, reject) => {
     canvas.toBlob(
       (blob) => (blob ? resolve({ blob, type, width: targetW, height: targetH }) : reject(new Error('Gagal mengompres gambar.'))),
@@ -66,8 +74,8 @@ export function replaceExtension(name, type) {
 }
 
 /**
- * Compress an uploaded photo and build a small thumbnail.
- * Falls back to the original file when compression would not help.
+ * Re-encode an uploaded photo to WebP and build a small thumbnail.
+ * Falls back to the original file when re-encoding would inflate it or fail.
  */
 export async function preparePhoto(file) {
   if (!file.type.startsWith('image/')) return { main: file, thumbnail: null }
@@ -76,12 +84,15 @@ export async function preparePhoto(file) {
   try {
     const main = await render(bitmap, MAX_EDGE, MAIN_QUALITY)
     const thumbnail = await render(bitmap, THUMB_EDGE, THUMB_QUALITY)
-    const beneficial = file.size > SKIP_BYTES || Math.max(bitmap.width, bitmap.height) > MAX_EDGE
-    if (!beneficial || main.blob.size >= file.size) {
+
+    // Never ship something larger than the file the admin picked.
+    if (main.blob.size >= file.size) {
       return { main: file, thumbnail: thumbnail.blob }
     }
+
     return { main: main.blob, thumbnail: thumbnail.blob, type: main.type }
   } finally {
     if (typeof bitmap.close === 'function') bitmap.close()
   }
 }
+
