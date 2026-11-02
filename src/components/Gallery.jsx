@@ -1,8 +1,26 @@
 ﻿import { useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { ImageOff, Loader2, Play, Trash2 } from 'lucide-react'
+import { ArrowUpRight, ImageOff, Play, Trash2, Upload } from 'lucide-react'
 import Modal from './Modal'
 import { getPublicUrl, MEDIA_BUCKET, supabase } from '../lib/supabase'
+
+const SPANS = [
+  'md:col-span-7',
+  'md:col-span-5',
+  'md:col-span-5',
+  'md:col-span-7',
+  'md:col-span-4',
+  'md:col-span-8',
+]
+
+const RATIOS = [
+  'aspect-[4/3]',
+  'aspect-[4/3]',
+  'aspect-[4/3]',
+  'aspect-[4/3]',
+  'aspect-[3/4]',
+  'aspect-[16/9]',
+]
 
 function Thumbnail({ item }) {
   const thumb = getPublicUrl(item.thumbnail_path)
@@ -12,21 +30,22 @@ function Thumbnail({ item }) {
     return thumb ? (
       <img src={thumb} alt={item.title} className="size-full object-cover" loading="lazy" />
     ) : (
-      <div className="grid size-full place-items-center bg-gradient-to-br from-slate-800 to-slate-900">
-        <Play className="size-10 text-violet-400" />
-      </div>
+      <span className="grid size-full place-items-center bg-deep-blue">
+        <Play className="size-10 text-white" aria-hidden="true" />
+      </span>
     )
   }
 
   return <img src={src} alt={item.title} className="size-full object-cover" loading="lazy" />
 }
 
-export default function Gallery({ media, loading, error, isAdmin, onChanged }) {
+export default function Gallery({ media, loading, error, isAdmin, onChanged, onUploadClick }) {
   const [selected, setSelected] = useState(null)
   const [deleting, setDeleting] = useState(null)
 
   async function handleDelete(item) {
     if (!window.confirm(`Hapus "${item.title}"? Tindakan ini tidak bisa dibatalkan.`)) return
+
     setDeleting(item.id)
     try {
       const paths = [item.storage_path, item.thumbnail_path].filter(Boolean)
@@ -37,7 +56,7 @@ export default function Gallery({ media, loading, error, isAdmin, onChanged }) {
       if (deleteError) throw deleteError
       onChanged?.()
     } catch (err) {
-      window.alert(err.message ?? 'Gagal menghapus.')
+      window.alert(err.message ?? 'Gagal menghapus dokumentasi.')
     } finally {
       setDeleting(null)
     }
@@ -45,15 +64,33 @@ export default function Gallery({ media, loading, error, isAdmin, onChanged }) {
 
   if (loading) {
     return (
-      <div className="grid place-items-center py-20 text-slate-500">
-        <Loader2 className="size-6 animate-spin" />
+      <div
+        className="grid gap-4 md:grid-cols-12"
+        aria-busy="true"
+        aria-label="Memuat galeri"
+      >
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div
+            key={index}
+            className={`${SPANS[index % SPANS.length]} overflow-hidden rounded-lg border border-line bg-paper`}
+          >
+            <div className={`skeleton w-full ${RATIOS[index % RATIOS.length]}`} />
+            <div className="border-t border-line px-4 py-3">
+              <div className="skeleton h-2.5 w-20" />
+              <div className="skeleton mt-2 h-4 w-3/4" />
+            </div>
+          </div>
+        ))}
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="rounded-2xl border border-red-500/20 bg-red-500/5 p-6 text-center text-sm text-red-400">
+      <div
+        role="alert"
+        className="rounded-lg border border-signal bg-paper p-6 text-sm text-signal"
+      >
         Gagal memuat galeri: {error.message}
       </div>
     )
@@ -61,55 +98,79 @@ export default function Gallery({ media, loading, error, isAdmin, onChanged }) {
 
   if (!media.length) {
     return (
-      <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.02] py-20 text-center">
-        <ImageOff className="mx-auto mb-3 size-8 text-slate-700" />
-        <p className="text-sm text-slate-400">Belum ada dokumentasi.</p>
-        <p className="mt-1 text-xs text-slate-600">
-          {isAdmin
-            ? 'Klik tombol Upload untuk menambahkan foto atau video pertama.'
-            : 'Admin belum mengupload foto atau video.'}
-        </p>
+      <div className="flex flex-col items-start gap-5 rounded-lg border border-line bg-paper px-6 py-12 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-start gap-4">
+          <span className="grid size-12 shrink-0 place-items-center rounded-lg bg-signal">
+            <ImageOff className="size-5 text-white" aria-hidden="true" />
+          </span>
+          <div>
+            <p className="text-base font-semibold">Arsip masih kosong.</p>
+            <p className="mt-1 max-w-[46ch] text-sm text-muted">
+              {isAdmin
+                ? 'Mulai dokumentasi dengan mengunggah foto atau video pertama.'
+                : 'Admin belum mengunggah foto atau video. Cek lagi nanti.'}
+            </p>
+          </div>
+        </div>
+        {isAdmin && (
+          <button
+            type="button"
+            onClick={onUploadClick}
+            className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-signal px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-signal-dark"
+          >
+            <Upload className="size-4" aria-hidden="true" />
+            Upload
+          </button>
+        )}
       </div>
     )
   }
 
   return (
     <>
-      <motion.div layout className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <motion.div layout className="grid gap-4 md:grid-cols-12">
         <AnimatePresence mode="popLayout">
-          {media.map((item) => (
+          {media.map((item, index) => (
             <motion.article
               key={item.id}
               layout
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.96 }}
-              className="group relative aspect-[4/3] overflow-hidden rounded-2xl border border-white/10 bg-white/5"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className={`${SPANS[index % SPANS.length]} group relative overflow-hidden rounded-lg border border-line bg-paper shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-transform duration-200 hover:-translate-y-0.5`}
             >
               <button
                 type="button"
                 onClick={() => setSelected(item)}
-                className="absolute inset-0"
-                aria-label={`Lihat ${item.title}`}
+                className="block w-full text-left"
+                aria-label={`Buka ${item.media_type}: ${item.title}`}
               >
-                <Thumbnail item={item} />
-                <span className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/10 to-transparent" />
-                {item.media_type === 'video' && (
-                  <span className="absolute inset-0 grid place-items-center">
-                    <span className="grid size-12 place-items-center rounded-full bg-white/15 backdrop-blur transition group-hover:scale-110 group-hover:bg-violet-600">
-                      <Play className="ml-0.5 size-5 fill-white" />
-                    </span>
-                  </span>
-                )}
-                <span className="absolute inset-x-0 bottom-0 p-4 text-left">
-                  <span className="block truncate text-sm font-semibold text-white">
-                    {item.title}
-                  </span>
-                  {item.description && (
-                    <span className="mt-0.5 block truncate text-xs text-slate-300">
-                      {item.description}
+                <span className={`relative block w-full overflow-hidden ${RATIOS[index % RATIOS.length]}`}>
+                  <Thumbnail item={item} />
+                  {item.media_type === 'video' && (
+                    <span className="absolute inset-0 grid place-items-center">
+                      <span className="grid size-12 place-items-center rounded-lg bg-signal transition-transform duration-200 group-hover:scale-105">
+                        <Play className="ml-0.5 size-5 fill-white text-white" aria-hidden="true" />
+                      </span>
                     </span>
                   )}
+                </span>
+
+                <span className="flex items-center justify-between gap-3 border-t border-line px-4 py-3">
+                  <span className="min-w-0">
+                    <span className="block font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+                      {item.media_type === 'video' ? 'Video' : 'Foto'} /{' '}
+                      {new Date(item.created_at).getFullYear()}
+                    </span>
+                    <span className="mt-1 block truncate text-sm font-semibold">
+                      {item.title}
+                    </span>
+                  </span>
+                  <ArrowUpRight
+                    className="size-4 shrink-0 text-muted transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  />
                 </span>
               </button>
 
@@ -118,13 +179,14 @@ export default function Gallery({ media, loading, error, isAdmin, onChanged }) {
                   type="button"
                   onClick={() => handleDelete(item)}
                   disabled={deleting === item.id}
-                  className="absolute right-3 top-3 rounded-full bg-slate-950/70 p-2 text-slate-300 opacity-0 backdrop-blur transition hover:bg-red-600 hover:text-white focus:opacity-100 group-hover:opacity-100"
+                  className="absolute right-3 top-3 z-10 rounded-lg border border-line bg-paper p-2 text-ink transition-colors duration-200 hover:border-signal hover:bg-signal hover:text-white disabled:opacity-60"
                   aria-label={`Hapus ${item.title}`}
+                  aria-busy={deleting === item.id}
                 >
                   {deleting === item.id ? (
-                    <Loader2 className="size-4 animate-spin" />
+                    <span className="block size-3 animate-pulse bg-signal" aria-hidden="true" />
                   ) : (
-                    <Trash2 className="size-4" />
+                    <Trash2 className="size-4" aria-hidden="true" />
                   )}
                 </button>
               )}
@@ -136,38 +198,47 @@ export default function Gallery({ media, loading, error, isAdmin, onChanged }) {
       <Modal
         open={Boolean(selected)}
         onClose={() => setSelected(null)}
-        title={selected?.title ?? 'Preview'}
+        title={selected?.title ?? 'Arsip'}
         wide
       >
         {selected && (
-          <div className="space-y-3">
-            {selected.media_type === 'video' ? (
-              <video
-                src={getPublicUrl(selected.storage_path)}
-                controls
-                autoPlay
-                className="max-h-[70vh] w-full rounded-xl bg-black"
-              />
-            ) : (
-              <img
-                src={getPublicUrl(selected.storage_path)}
-                alt={selected.title}
-                className="max-h-[70vh] w-full rounded-xl object-contain"
-              />
-            )}
+          <div className="space-y-4">
+            <div className="overflow-hidden rounded-lg border border-line bg-paper-soft">
+              {selected.media_type === 'video' ? (
+                <video
+                  src={getPublicUrl(selected.storage_path)}
+                  controls
+                  autoPlay
+                  className="max-h-[65vh] w-full bg-ink"
+                />
+              ) : (
+                <img
+                  src={getPublicUrl(selected.storage_path)}
+                  alt={selected.title}
+                  className="max-h-[65vh] w-full object-contain"
+                />
+              )}
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line pt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
+              <span>{selected.media_type}</span>
+              <span>
+                {new Date(selected.created_at).toLocaleDateString('id-ID', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                })}
+              </span>
+            </div>
+
             {selected.description && (
-              <p className="text-sm text-slate-400">{selected.description}</p>
+              <p className="text-sm leading-relaxed text-muted">{selected.description}</p>
             )}
-            <p className="text-xs text-slate-600">
-              Diupload {new Date(selected.created_at).toLocaleDateString('id-ID', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric',
-              })}
-            </p>
           </div>
         )}
       </Modal>
     </>
   )
 }
+
+

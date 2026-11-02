@@ -15,33 +15,45 @@ export default function App() {
   const [uploadOpen, setUploadOpen] = useState(false)
 
   return (
-    <div className="min-h-screen font-sans">
+    <div className="min-h-[100dvh] bg-paper-soft">
       <Navbar
         onLoginClick={() => setLoginOpen(true)}
         onUploadClick={() => setUploadOpen(true)}
       />
+
       <main>
-        <Hero onUploadClick={() => setUploadOpen(true)} />
+        <Hero count={media.length} onUploadClick={() => setUploadOpen(true)} />
 
-        <section id="galeri" className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
-          <div className="mb-10">
-            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Galeri Kenangan</h2>
-            <p className="mt-2 text-sm text-slate-400">
-              {isAdmin
-                ? 'Kamu login sebagai admin. Kamu bisa upload dan menghapus dokumentasi.'
-                : 'Dokumentasi foto dan video kelas yang diupload oleh admin.'}
-            </p>
+        <section id="galeri" className="scroll-mt-16 bg-paper-soft py-16 sm:py-24">
+          <div className="mx-auto max-w-[1280px] px-6">
+            <div className="mb-10 grid gap-4 border-b border-ink pb-4 md:grid-cols-12 sm:items-end">
+              <div className="md:col-span-8">
+                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
+                  02 - Galeri
+                </p>
+                <h2 className="mt-2 text-3xl font-bold uppercase tracking-tight sm:text-4xl">
+                  Galeri kenangan
+                </h2>
+              </div>
+              <p className="text-sm leading-relaxed text-muted md:col-span-4 md:text-right">
+                {isAdmin
+                  ? 'Kamu masuk sebagai admin. Unggah atau hapus dokumentasi lewat tombol di setiap kartu.'
+                  : 'Dokumentasi foto dan video kelas yang diunggah oleh admin.'}
+              </p>
+            </div>
+
+            <Gallery
+              media={media}
+              loading={loading}
+              error={error}
+              isAdmin={isAdmin}
+              onChanged={refresh}
+              onUploadClick={() => setUploadOpen(true)}
+            />
           </div>
-
-          <Gallery
-            media={media}
-            loading={loading}
-            error={error}
-            isAdmin={isAdmin}
-            onChanged={refresh}
-          />
         </section>
       </main>
+
       <Footer />
 
       <AdminLoginModal open={loginOpen} onClose={() => setLoginOpen(false)} />
@@ -53,3 +65,5 @@ export default function App() {
     </div>
   )
 }
+
+

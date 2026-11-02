@@ -1,10 +1,15 @@
 ﻿import { useState } from 'react'
-import { FileVideo, Image as ImageIcon, Loader2, UploadCloud } from 'lucide-react'
+import { FileVideo, Image as ImageIcon, UploadCloud } from 'lucide-react'
 import Modal from './Modal'
 import { supabase, MEDIA_BUCKET } from '../lib/supabase'
 
 const MAX_PHOTO_MB = 10
 const MAX_VIDEO_MB = 50
+
+const inputClass =
+  'w-full rounded-lg border border-line bg-paper px-3 py-2.5 text-sm text-ink placeholder:text-cool transition-colors duration-200 focus:border-signal'
+
+const labelClass = 'mb-1.5 block font-mono text-[10px] uppercase tracking-[0.16em] text-muted'
 
 function safeName(name) {
   return name
@@ -37,8 +42,9 @@ export default function UploadModal({ open, onClose, onUploaded }) {
     onClose()
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault()
+  async function handleSubmit(event) {
+    event.preventDefault()
+
     if (!file) {
       setError('Pilih file foto atau video dulu.')
       return
@@ -94,99 +100,107 @@ export default function UploadModal({ open, onClose, onUploaded }) {
   return (
     <Modal open={open} onClose={handleClose} title="Upload Dokumentasi">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-2">
-          {[
-            { value: 'foto', label: 'Foto', icon: ImageIcon },
-            { value: 'video', label: 'Video', icon: FileVideo },
-          ].map(({ value, label, icon: Icon }) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => {
-                setType(value)
-                setFile(null)
-                setThumbnail(null)
-              }}
-              className={`flex items-center justify-center gap-2 rounded-xl border py-2.5 text-sm font-medium transition ${
-                type === value
-                  ? 'border-violet-500 bg-violet-500/15 text-violet-300'
-                  : 'border-white/10 bg-white/5 text-slate-400 hover:bg-white/10'
-              }`}
-            >
-              <Icon className="size-4" />
-              {label}
-            </button>
-          ))}
-        </div>
+        <fieldset>
+          <legend className={labelClass}>Jenis media</legend>
+          <div className="grid grid-cols-2 gap-2">
+            {[
+              { value: 'foto', label: 'Foto', icon: ImageIcon },
+              { value: 'video', label: 'Video', icon: FileVideo },
+            ].map(({ value, label, icon: Icon }) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => {
+                  setType(value)
+                  setFile(null)
+                  setThumbnail(null)
+                }}
+                aria-pressed={type === value}
+                className={`flex items-center justify-center gap-2 rounded-lg border py-2.5 text-xs font-semibold uppercase tracking-[0.1em] transition-colors duration-200 ${
+                  type === value
+                    ? 'border-ink bg-ink text-white'
+                    : 'border-line bg-paper text-muted hover:border-ink hover:text-ink'
+                }`}
+              >
+                <Icon className="size-4" aria-hidden="true" />
+                {label}
+              </button>
+            ))}
+          </div>
+        </fieldset>
 
         <label className="block">
-          <span className="mb-1.5 block text-sm font-medium text-slate-300">Judul</span>
+          <span className={labelClass}>Judul</span>
           <input
             type="text"
             required
+            maxLength={120}
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(event) => setTitle(event.target.value)}
             placeholder="Contoh: Study Tour Bandung"
-            className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm outline-none placeholder:text-slate-600 focus:border-violet-500"
+            className={inputClass}
           />
         </label>
 
         <label className="block">
-          <span className="mb-1.5 block text-sm font-medium text-slate-300">
-            Deskripsi <span className="text-slate-600">(opsional)</span>
-          </span>
+          <span className={labelClass}>Deskripsi (opsional)</span>
           <textarea
             rows={2}
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(event) => setDescription(event.target.value)}
             placeholder="Ceritakan momennya..."
-            className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm outline-none placeholder:text-slate-600 focus:border-violet-500"
+            className={`${inputClass} resize-none`}
           />
         </label>
 
-        <label className="block cursor-pointer rounded-xl border border-dashed border-white/15 bg-white/5 px-4 py-6 text-center transition hover:border-violet-500/60 hover:bg-white/10">
-          <UploadCloud className="mx-auto mb-2 size-6 text-violet-400" />
-          <span className="block text-sm font-medium text-slate-300">
+        <label className="block cursor-pointer rounded-lg border border-dashed border-cool bg-paper-soft px-4 py-6 text-center transition-colors duration-200 hover:border-ink">
+          <UploadCloud className="mx-auto mb-2 size-6 text-ink" aria-hidden="true" />
+          <span className="block text-sm font-medium text-ink">
             {file ? file.name : `Pilih file ${type}`}
           </span>
-          <span className="mt-1 block text-xs text-slate-500">
+          <span className="mt-1 block font-mono text-[10px] uppercase tracking-[0.12em] text-muted">
             Maks {type === 'foto' ? MAX_PHOTO_MB : MAX_VIDEO_MB} MB
           </span>
           <input
             type="file"
             required
             accept={type === 'foto' ? 'image/*' : 'video/*'}
-            onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+            onChange={(event) => setFile(event.target.files?.[0] ?? null)}
             className="hidden"
           />
         </label>
 
         {type === 'video' && (
-          <label className="block cursor-pointer rounded-xl border border-dashed border-white/15 bg-white/5 px-4 py-4 text-center transition hover:border-violet-500/60">
-            <ImageIcon className="mx-auto mb-1.5 size-5 text-slate-400" />
-            <span className="block text-sm text-slate-300">
+          <label className="block cursor-pointer rounded-lg border border-dashed border-cool bg-paper px-4 py-4 text-center transition-colors duration-200 hover:border-ink">
+            <ImageIcon className="mx-auto mb-1.5 size-5 text-muted" aria-hidden="true" />
+            <span className="block text-sm text-ink">
               {thumbnail ? thumbnail.name : 'Thumbnail video (opsional)'}
             </span>
             <input
               type="file"
               accept="image/*"
-              onChange={(e) => setThumbnail(e.target.files?.[0] ?? null)}
+              onChange={(event) => setThumbnail(event.target.files?.[0] ?? null)}
               className="hidden"
             />
           </label>
         )}
 
         {error && (
-          <p className="rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-400">{error}</p>
+          <p
+            role="alert"
+            className="rounded-lg border border-signal bg-paper px-3 py-2 text-sm text-signal"
+          >
+            {error}
+          </p>
         )}
 
         <button
           type="submit"
           disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-violet-600 py-2.5 text-sm font-semibold transition hover:bg-violet-500 disabled:opacity-60"
+          aria-busy={loading}
+          className="w-full rounded-lg bg-signal py-2.5 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-signal-dark active:translate-y-0 disabled:translate-y-0 disabled:opacity-60"
         >
-          {loading && <Loader2 className="size-4 animate-spin" />}
-          {loading ? 'Mengupload...' : 'Upload'}
+          {loading ? 'Mengunggah...' : 'Upload'}
         </button>
       </form>
     </Modal>

@@ -1,16 +1,56 @@
-﻿import { AnimatePresence, motion } from 'motion/react'
+﻿import { useEffect, useId, useRef } from 'react'
+import { AnimatePresence, motion } from 'motion/react'
 import { X } from 'lucide-react'
-import { useEffect } from 'react'
 
 export default function Modal({ open, onClose, title, children, wide = false }) {
+  const panelRef = useRef(null)
+  const titleId = useId()
+
   useEffect(() => {
     if (!open) return
-    const onKey = (e) => e.key === 'Escape' && onClose()
-    document.addEventListener('keydown', onKey)
+
+    const previous = document.activeElement
+    const panel = panelRef.current
+
+    const getFocusable = () =>
+      Array.from(
+        panel?.querySelectorAll(
+          'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
+        ) ?? [],
+      ).filter((element) => element.offsetParent !== null)
+
+    getFocusable()[0]?.focus()
+
+    function onKeyDown(event) {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        onClose()
+        return
+      }
+      if (event.key !== 'Tab') return
+
+      const items = getFocusable()
+      if (!items.length) return
+
+      const first = items[0]
+      const last = items[items.length - 1]
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+
+    document.addEventListener('keydown', onKeyDown)
     document.body.style.overflow = 'hidden'
+
     return () => {
-      document.removeEventListener('keydown', onKey)
+      document.removeEventListener('keydown', onKeyDown)
       document.body.style.overflow = ''
+      if (previous instanceof HTMLElement) previous.focus()
     }
   }, [open, onClose])
 
@@ -18,35 +58,41 @@ export default function Modal({ open, onClose, title, children, wide = false }) 
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+          className="fixed inset-0 z-[300] flex items-center justify-center p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
         >
           <div
-            className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"
+            className="absolute inset-0 bg-ink/60"
             onClick={onClose}
             aria-hidden="true"
           />
           <motion.div
+            ref={panelRef}
             role="dialog"
             aria-modal="true"
-            aria-label={title}
-            initial={{ opacity: 0, scale: 0.95, y: 16 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 16 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 26 }}
-            className={`relative w-full ${wide ? 'max-w-3xl' : 'max-w-md'} max-h-[90vh] overflow-y-auto rounded-2xl border border-white/10 bg-slate-900 p-6 shadow-2xl`}
+            aria-labelledby={titleId}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 16 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            className={`relative max-h-[90vh] w-full overflow-y-auto rounded-lg border border-line bg-paper p-6 shadow-[0_2px_12px_rgba(0,0,0,0.08)] ${
+              wide ? 'max-w-3xl' : 'max-w-md'
+            }`}
           >
-            <div className="mb-5 flex items-center justify-between gap-4">
-              <h2 className="text-lg font-bold">{title}</h2>
+            <div className="mb-5 flex items-start justify-between gap-4">
+              <h2 id={titleId} className="text-lg font-bold uppercase tracking-[0.02em]">
+                {title}
+              </h2>
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-full p-1.5 text-slate-400 transition hover:bg-white/10 hover:text-white"
+                className="rounded-lg border border-line p-1.5 text-muted transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-white"
                 aria-label="Tutup"
               >
-                <X className="size-5" />
+                <X className="size-4" aria-hidden="true" />
               </button>
             </div>
             {children}
