@@ -5,6 +5,7 @@ import MediaTypeToggle from './MediaTypeToggle'
 import FileDropzone from './FileDropzone'
 import { supabase, MEDIA_BUCKET } from '../lib/supabase'
 import { preparePhoto, replaceExtension } from '../lib/image'
+import { extractPoster } from '../lib/video'
 
 const MAX_PHOTO_MB = 10
 const MAX_VIDEO_MB = 50
@@ -101,6 +102,10 @@ export default function UploadModal({ open, onClose, onUploaded }) {
         }
       } else if (thumbnail) {
         thumbnailBody = thumbnail
+      } else {
+        // No manual thumbnail: try to grab a poster frame from the video itself.
+        setStage('compressing')
+        thumbnailBody = await extractPoster(file)
       }
 
       setStage('uploading')
@@ -137,7 +142,13 @@ export default function UploadModal({ open, onClose, onUploaded }) {
   }
 
   const submitLabel =
-    stage === 'compressing' ? 'Mengoptimalkan gambar...' : stage === 'uploading' ? 'Mengunggah...' : 'Upload'
+    stage !== 'uploading' && stage !== null
+      ? type === 'video'
+        ? 'Menyiapkan thumbnail...'
+        : 'Mengoptimalkan gambar...'
+      : stage === 'uploading'
+        ? 'Mengunggah...'
+        : 'Upload'
 
   return (
     <Modal open={open} onClose={handleClose} title="Upload Dokumentasi">
@@ -220,4 +231,5 @@ export default function UploadModal({ open, onClose, onUploaded }) {
     </Modal>
   )
 }
+
 
