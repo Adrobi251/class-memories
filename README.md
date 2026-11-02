@@ -46,8 +46,3 @@ Landing page dokumentasi foto & video kelas, dengan upload khusus admin.
 - Hapus dokumentasi (admin only)
 - Row Level Security: publik hanya bisa baca
 
-## Deploy ke Vercel
-
-1. Import repo GitHub ini di Vercel.
-2. Tambahkan environment variables `VITE_SUPABASE_URL` dan `VITE_SUPABASE_ANON_KEY`.
-3. Deploy.
