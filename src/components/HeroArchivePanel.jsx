@@ -43,7 +43,7 @@ export default function HeroArchivePanel({ media = [] }) {
         {featured ? (
           <div className="p-2">
             <div className="relative aspect-[16/10] w-full overflow-hidden rounded-lg bg-paper-soft">
-              <MediaThumbnail item={featured} />
+              <MediaThumbnail item={featured} priority />
               <span className="absolute bottom-2 left-2">
                 <TypeChip type={featured.media_type} />
               </span>
@@ -56,7 +56,7 @@ export default function HeroArchivePanel({ media = [] }) {
                     key={item.id}
                     className="relative aspect-square overflow-hidden rounded-lg bg-paper-soft"
                   >
-                    <MediaThumbnail item={item} />
+                    <MediaThumbnail item={item} priority />
                     <span className="absolute bottom-1.5 left-1.5">
                       <TypeChip type={item.media_type} />
                     </span>
@@ -117,3 +117,4 @@ export default function HeroArchivePanel({ media = [] }) {
     </div>
   )
 }
+

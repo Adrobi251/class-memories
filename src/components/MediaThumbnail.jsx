@@ -2,34 +2,30 @@
 import { ImageOff, Play } from 'lucide-react'
 import { getPublicUrl } from '../lib/supabase'
 
-export default function MediaThumbnail({ item }) {
-  const [thumbFailed, setThumbFailed] = useState(false)
-  const [mediaFailed, setMediaFailed] = useState(false)
+export default function MediaThumbnail({ item, priority = false }) {
+  const [failed, setFailed] = useState(false)
+  const [useFallback, setUseFallback] = useState(false)
+
   const thumb = getPublicUrl(item.thumbnail_path)
-  const src = getPublicUrl(item.storage_path)
+  const original = getPublicUrl(item.storage_path)
+  const isVideo = item.media_type === 'video'
 
-  if (item.media_type === 'video') {
-    return thumb && !thumbFailed ? (
-      <img
-        src={thumb}
-        alt={`Thumbnail video: ${item.title}`}
-        className="size-full object-cover"
-        loading="lazy"
-        decoding="async"
-        onError={() => setThumbFailed(true)}
-      />
-    ) : (
-      <span className="grid size-full place-items-center bg-deep-blue">
-        <Play className="size-10 text-white" aria-hidden="true" />
-      </span>
-    )
-  }
+  const src = isVideo ? thumb : thumb && !useFallback ? thumb : original
+  const loading = priority ? 'eager' : 'lazy'
 
-  if (mediaFailed) {
+  if (!src || failed) {
     return (
-      <span className="grid size-full place-items-center bg-paper-soft">
-        <ImageOff className="size-7 text-muted" aria-hidden="true" />
-        <span className="sr-only">Foto tidak dapat dimuat</span>
+      <span
+        className={`grid size-full place-items-center ${isVideo ? 'bg-deep-blue' : 'bg-paper-soft'}`}
+      >
+        {isVideo ? (
+          <Play className="size-10 text-white" aria-hidden="true" />
+        ) : (
+          <ImageOff className="size-7 text-muted" aria-hidden="true" />
+        )}
+        <span className="sr-only">
+          {isVideo ? 'Thumbnail video tidak dapat dimuat' : 'Foto tidak dapat dimuat'}
+        </span>
       </span>
     )
   }
@@ -37,11 +33,15 @@ export default function MediaThumbnail({ item }) {
   return (
     <img
       src={src}
-      alt={item.title}
+      alt={isVideo ? `Thumbnail video: ${item.title}` : item.title}
       className="size-full object-cover"
-      loading="lazy"
+      loading={loading}
+      fetchPriority={priority ? 'high' : undefined}
       decoding="async"
-      onError={() => setMediaFailed(true)}
+      onError={() => {
+        if (!isVideo && thumb && !useFallback) setUseFallback(true)
+        else setFailed(true)
+      }}
     />
   )
 }

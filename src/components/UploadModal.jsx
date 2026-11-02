@@ -4,9 +4,11 @@ import Modal from './Modal'
 import MediaTypeToggle from './MediaTypeToggle'
 import FileDropzone from './FileDropzone'
 import { supabase, MEDIA_BUCKET } from '../lib/supabase'
+import { preparePhoto, replaceExtension } from '../lib/image'
 
 const MAX_PHOTO_MB = 10
 const MAX_VIDEO_MB = 50
+const CACHE_CONTROL = '31536000'
 
 const inputClass =
   'w-full rounded-lg border border-line bg-paper px-3 py-2.5 text-sm text-ink placeholder:text-muted transition-colors duration-200 focus:border-signal'
@@ -29,7 +31,9 @@ export default function UploadModal({ open, onClose, onUploaded }) {
   const [file, setFile] = useState(null)
   const [thumbnail, setThumbnail] = useState(null)
   const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [stage, setStage] = useState(null)
+
+  const loading = stage !== null
 
   function reset() {
     setTitle('')
@@ -38,6 +42,7 @@ export default function UploadModal({ open, onClose, onUploaded }) {
     setFile(null)
     setThumbnail(null)
     setError('')
+    setStage(null)
   }
 
   function handleClose() {
@@ -51,6 +56,13 @@ export default function UploadModal({ open, onClose, onUploaded }) {
     setFile(null)
     setThumbnail(null)
     setError('')
+  }
+
+  async function uploadObject(path, body) {
+    const { error: uploadError } = await supabase.storage
+      .from(MEDIA_BUCKET)
+      .upload(path, body, { cacheControl: CACHE_CONTROL, upsert: false })
+    if (uploadError) throw uploadError
   }
 
   async function handleSubmit(event) {
@@ -68,24 +80,35 @@ export default function UploadModal({ open, onClose, onUploaded }) {
     }
 
     setError('')
-    setLoading(true)
 
     try {
       const stamp = Date.now()
-      const path = `${type}/${stamp}-${safeName(file.name)}`
+      let mainBody = file
+      let mainName = safeName(file.name)
+      let thumbnailBody = null
 
-      const { error: uploadError } = await supabase.storage
-        .from(MEDIA_BUCKET)
-        .upload(path, file, { cacheControl: '3600', upsert: false })
-      if (uploadError) throw uploadError
+      if (type === 'foto') {
+        setStage('compressing')
+        const prepared = await preparePhoto(file)
+        mainBody = prepared.main
+        thumbnailBody = prepared.thumbnail
+        if (prepared.type) mainName = safeName(replaceExtension(file.name, prepared.type))
+      } else if (thumbnail) {
+        thumbnailBody = thumbnail
+      }
+
+      setStage('uploading')
+      const path = `${type}/${stamp}-${mainName}`
+      await uploadObject(path, mainBody)
 
       let thumbnailPath = null
-      if (type === 'video' && thumbnail) {
-        const thumbPath = `thumbnails/${stamp}-${safeName(thumbnail.name)}`
-        const { error: thumbError } = await supabase.storage
-          .from(MEDIA_BUCKET)
-          .upload(thumbPath, thumbnail, { cacheControl: '3600', upsert: false })
-        if (thumbError) throw thumbError
+      if (thumbnailBody) {
+        const thumbName =
+          type === 'foto'
+            ? safeName(replaceExtension(mainName, thumbnailBody.type || 'image/webp'))
+            : safeName(thumbnailBody.name ?? 'thumbnail.jpg')
+        const thumbPath = `thumbnails/${stamp}-${thumbName}`
+        await uploadObject(thumbPath, thumbnailBody)
         thumbnailPath = thumbPath
       }
 
@@ -103,10 +126,12 @@ export default function UploadModal({ open, onClose, onUploaded }) {
       onClose()
     } catch (err) {
       setError(err.message ?? 'Upload gagal. Coba lagi.')
-    } finally {
-      setLoading(false)
+      setStage(null)
     }
   }
+
+  const submitLabel =
+    stage === 'compressing' ? 'Mengoptimalkan gambar...' : stage === 'uploading' ? 'Mengunggah...' : 'Upload'
 
   return (
     <Modal open={open} onClose={handleClose} title="Upload Dokumentasi">
@@ -149,6 +174,12 @@ export default function UploadModal({ open, onClose, onUploaded }) {
           }}
         />
 
+        {type === 'foto' && (
+          <p className="font-mono text-[11px] uppercase leading-relaxed tracking-[0.12em] text-muted">
+            Foto otomatis dikompres ke maks 1920 px + thumbnail 800 px agar galeri tetap ringan.
+          </p>
+        )}
+
         {type === 'video' && (
           <FileDropzone
             id={thumbnailId}
@@ -177,7 +208,7 @@ export default function UploadModal({ open, onClose, onUploaded }) {
           aria-busy={loading}
           className="min-h-11 w-full rounded-lg bg-signal text-xs font-semibold uppercase tracking-[0.1em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-signal-dark active:translate-y-0 disabled:translate-y-0 disabled:opacity-60"
         >
-          {loading ? 'Mengunggah...' : 'Upload'}
+          {submitLabel}
         </button>
       </form>
     </Modal>

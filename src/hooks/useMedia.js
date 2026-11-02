@@ -12,6 +12,7 @@ export function useMedia() {
       .from('media')
       .select('*')
       .order('created_at', { ascending: false })
+      .limit(500)
 
     if (fetchError) setError(fetchError)
     else {
@@ -27,3 +28,4 @@ export function useMedia() {
 
   return { media, loading, error, refresh }
 }
+
