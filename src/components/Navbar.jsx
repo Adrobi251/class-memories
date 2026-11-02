@@ -55,7 +55,7 @@ export default function Navbar({ onLoginClick, onUploadClick }) {
               <a
                 key={link.href}
                 href={link.href}
-                aria-current={active === link.id ? 'true' : undefined}
+                aria-current={active === link.id ? 'location' : undefined}
                 className={`border-b-2 pb-1 font-mono text-[11px] uppercase tracking-[0.14em] transition-colors duration-200 ${
                   active === link.id
                     ? 'border-signal text-signal'
@@ -120,7 +120,7 @@ export default function Navbar({ onLoginClick, onUploadClick }) {
                   setActive(link.id)
                   close()
                 }}
-                aria-current={active === link.id ? 'true' : undefined}
+                aria-current={active === link.id ? 'location' : undefined}
                 className={`font-mono text-[11px] uppercase tracking-[0.14em] ${
                   active === link.id ? 'text-signal' : 'text-muted'
                 }`}

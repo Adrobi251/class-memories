@@ -1,6 +1,8 @@
-﻿import { useState } from 'react'
-import { FileVideo, Image as ImageIcon, UploadCloud } from 'lucide-react'
+﻿import { useId, useState } from 'react'
+import { Image as ImageIcon } from 'lucide-react'
 import Modal from './Modal'
+import MediaTypeToggle from './MediaTypeToggle'
+import FileDropzone from './FileDropzone'
 import { supabase, MEDIA_BUCKET } from '../lib/supabase'
 
 const MAX_PHOTO_MB = 10
@@ -19,6 +21,8 @@ function safeName(name) {
 }
 
 export default function UploadModal({ open, onClose, onUploaded }) {
+  const fileId = useId()
+  const thumbnailId = useId()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [type, setType] = useState('foto')
@@ -40,6 +44,13 @@ export default function UploadModal({ open, onClose, onUploaded }) {
     if (loading) return
     reset()
     onClose()
+  }
+
+  function handleTypeChange(nextType) {
+    setType(nextType)
+    setFile(null)
+    setThumbnail(null)
+    setError('')
   }
 
   async function handleSubmit(event) {
@@ -100,34 +111,7 @@ export default function UploadModal({ open, onClose, onUploaded }) {
   return (
     <Modal open={open} onClose={handleClose} title="Upload Dokumentasi">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <fieldset>
-          <legend className={labelClass}>Jenis media</legend>
-          <div className="grid grid-cols-2 gap-2">
-            {[
-              { value: 'foto', label: 'Foto', icon: ImageIcon },
-              { value: 'video', label: 'Video', icon: FileVideo },
-            ].map(({ value, label, icon: Icon }) => (
-              <button
-                key={value}
-                type="button"
-                onClick={() => {
-                  setType(value)
-                  setFile(null)
-                  setThumbnail(null)
-                }}
-                aria-pressed={type === value}
-                className={`flex items-center justify-center gap-2 rounded-lg border py-2.5 text-xs font-semibold uppercase tracking-[0.1em] transition-colors duration-200 ${
-                  type === value
-                    ? 'border-ink bg-ink text-white'
-                    : 'border-line bg-paper text-muted hover:border-ink hover:text-ink'
-                }`}
-              >
-                <Icon className="size-4" aria-hidden="true" />
-                {label}
-              </button>
-            ))}
-          </div>
-        </fieldset>
+        <MediaTypeToggle value={type} onChange={handleTypeChange} />
 
         <label className="block">
           <span className={labelClass}>Judul</span>
@@ -153,36 +137,29 @@ export default function UploadModal({ open, onClose, onUploaded }) {
           />
         </label>
 
-        <label className="block cursor-pointer rounded-lg border border-dashed border-cool bg-paper-soft px-4 py-6 text-center transition-colors duration-200 hover:border-ink">
-          <UploadCloud className="mx-auto mb-2 size-6 text-ink" aria-hidden="true" />
-          <span className="block text-sm font-medium text-ink">
-            {file ? file.name : `Pilih file ${type}`}
-          </span>
-          <span className="mt-1 block font-mono text-[10px] uppercase tracking-[0.12em] text-muted">
-            Maks {type === 'foto' ? MAX_PHOTO_MB : MAX_VIDEO_MB} MB
-          </span>
-          <input
-            type="file"
-            required
-            accept={type === 'foto' ? 'image/*' : 'video/*'}
-            onChange={(event) => setFile(event.target.files?.[0] ?? null)}
-            className="hidden"
-          />
-        </label>
+        <FileDropzone
+          id={fileId}
+          accept={type === 'foto' ? 'image/*' : 'video/*'}
+          file={file}
+          label={`Pilih file ${type}`}
+          hint={`Maks ${type === 'foto' ? MAX_PHOTO_MB : MAX_VIDEO_MB} MB`}
+          onChange={(nextFile) => {
+            setFile(nextFile)
+            setError('')
+          }}
+        />
 
         {type === 'video' && (
-          <label className="block cursor-pointer rounded-lg border border-dashed border-cool bg-paper px-4 py-4 text-center transition-colors duration-200 hover:border-ink">
-            <ImageIcon className="mx-auto mb-1.5 size-5 text-muted" aria-hidden="true" />
-            <span className="block text-sm text-ink">
-              {thumbnail ? thumbnail.name : 'Thumbnail video (opsional)'}
-            </span>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(event) => setThumbnail(event.target.files?.[0] ?? null)}
-              className="hidden"
-            />
-          </label>
+          <FileDropzone
+            id={thumbnailId}
+            accept="image/*"
+            file={thumbnail}
+            label="Thumbnail video (opsional)"
+            hint="JPG atau PNG"
+            icon={ImageIcon}
+            surface="paper"
+            onChange={setThumbnail}
+          />
         )}
 
         {error && (

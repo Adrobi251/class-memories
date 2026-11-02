@@ -4,7 +4,12 @@ import { X } from 'lucide-react'
 
 export default function Modal({ open, onClose, title, children, wide = false }) {
   const panelRef = useRef(null)
+  const onCloseRef = useRef(onClose)
   const titleId = useId()
+
+  useEffect(() => {
+    onCloseRef.current = onClose
+  }, [onClose])
 
   useEffect(() => {
     if (!open) return
@@ -19,26 +24,37 @@ export default function Modal({ open, onClose, title, children, wide = false }) 
         ) ?? [],
       ).filter((element) => element.offsetParent !== null)
 
-    getFocusable()[0]?.focus()
+    panel?.focus()
 
     function onKeyDown(event) {
       if (event.key === 'Escape') {
         event.preventDefault()
-        onClose()
+        onCloseRef.current()
         return
       }
       if (event.key !== 'Tab') return
 
       const items = getFocusable()
-      if (!items.length) return
+      if (!items.length) {
+        event.preventDefault()
+        return
+      }
 
       const first = items[0]
       const last = items[items.length - 1]
+      const active = document.activeElement
+      const inside = panel?.contains(active)
 
-      if (event.shiftKey && document.activeElement === first) {
+      if (!inside) {
+        event.preventDefault()
+        ;(event.shiftKey ? last : first).focus()
+        return
+      }
+
+      if (event.shiftKey && (active === first || active === panel)) {
         event.preventDefault()
         last.focus()
-      } else if (!event.shiftKey && document.activeElement === last) {
+      } else if (!event.shiftKey && active === last) {
         event.preventDefault()
         first.focus()
       }
@@ -52,7 +68,7 @@ export default function Modal({ open, onClose, title, children, wide = false }) 
       document.body.style.overflow = ''
       if (previous instanceof HTMLElement) previous.focus()
     }
-  }, [open, onClose])
+  }, [open])
 
   return (
     <AnimatePresence>
@@ -74,11 +90,12 @@ export default function Modal({ open, onClose, title, children, wide = false }) 
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
+            tabIndex={-1}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 16 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className={`relative max-h-[90vh] w-full overflow-y-auto rounded-lg border border-line bg-paper p-6 shadow-[0_2px_12px_rgba(0,0,0,0.08)] ${
+            className={`relative max-h-[90vh] w-full overflow-y-auto rounded-lg border border-line bg-paper p-6 shadow-[0_2px_12px_rgba(0,0,0,0.08)] outline-none ${
               wide ? 'max-w-3xl' : 'max-w-md'
             }`}
           >

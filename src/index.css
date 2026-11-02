@@ -41,6 +41,10 @@
   }
 }
 
+@utility shadow-card {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
 @keyframes shimmer {
   0% {
     background-position: -600px 0;
