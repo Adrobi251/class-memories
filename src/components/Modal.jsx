@@ -106,7 +106,7 @@ export default function Modal({ open, onClose, title, children, wide = false }) 
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-lg border border-line p-1.5 text-muted transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-white"
+                className="grid size-11 shrink-0 place-items-center rounded-lg border border-line text-muted transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-white"
                 aria-label="Tutup"
               >
                 <X className="size-4" aria-hidden="true" />

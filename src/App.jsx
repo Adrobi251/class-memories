@@ -34,7 +34,7 @@ export default function App() {
       <div className="min-h-[100dvh] bg-paper-soft">
         <a
           href="#main-content"
-          className="fixed left-4 top-4 z-[500] -translate-y-24 rounded-lg bg-ink px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-transform duration-200 focus:translate-y-0 motion-reduce:transition-none"
+          className="fixed left-4 top-4 z-[600] -translate-y-24 rounded-lg bg-ink px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-transform duration-200 focus:translate-y-0 motion-reduce:transition-none"
         >
           Lewati ke konten
         </a>
@@ -51,10 +51,10 @@ export default function App() {
             <div className="mx-auto max-w-[1280px] px-6">
               <div className="mb-10 grid gap-4 border-b border-ink pb-4 sm:items-end md:grid-cols-12">
                 <div className="md:col-span-8">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
                     02 - Galeri
                   </p>
-                  <h2 className="mt-2 text-3xl font-bold uppercase tracking-tight sm:text-4xl">
+                  <h2 id="galeri-title" tabIndex={-1} className="mt-2 text-3xl font-bold uppercase tracking-tight sm:text-4xl">
                     Galeri kenangan
                   </h2>
                 </div>
@@ -72,6 +72,7 @@ export default function App() {
                 isAdmin={isAdmin}
                 onDeleted={handleDeleted}
                 onUploadClick={() => setUploadOpen(true)}
+                onRetry={refresh}
               />
             </div>
           </section>

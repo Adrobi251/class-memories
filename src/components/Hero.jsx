@@ -65,7 +65,7 @@ export default function Hero({ count = 0, onUploadClick }) {
             >
               <a
                 href="#galeri"
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-signal px-6 py-3 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-signal-dark active:translate-y-0"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-signal px-6 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-signal-dark active:translate-y-0"
               >
                 Lihat arsip
                 <ArrowRight className="size-4" aria-hidden="true" />
@@ -74,7 +74,7 @@ export default function Hero({ count = 0, onUploadClick }) {
                 <button
                   type="button"
                   onClick={onUploadClick}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg border-[1.5px] border-ink px-6 py-3 text-xs font-semibold uppercase tracking-[0.1em] text-ink transition-colors duration-200 hover:bg-ink hover:text-white"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border-[1.5px] border-ink px-6 text-xs font-semibold uppercase tracking-[0.1em] text-ink transition-colors duration-200 hover:bg-ink hover:text-white"
                 >
                   <Upload className="size-4" aria-hidden="true" />
                   Upload dokumentasi
@@ -91,7 +91,7 @@ export default function Hero({ count = 0, onUploadClick }) {
             aria-label="Status arsip"
           >
             <div className="rounded-lg bg-deep-blue p-6 text-white">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/70">
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/70">
                 Status arsip
               </p>
               <p className="mt-4 font-mono text-6xl font-medium leading-none">
@@ -99,7 +99,7 @@ export default function Hero({ count = 0, onUploadClick }) {
               </p>
               <p className="mt-2 text-sm text-white/80">dokumen tersimpan</p>
 
-              <dl className="mt-8 space-y-3 border-t border-white/30 pt-4 font-mono text-[10px] uppercase tracking-[0.12em]">
+              <dl className="mt-8 space-y-3 border-t border-white/30 pt-4 font-mono text-[11px] uppercase tracking-[0.12em]">
                 <div className="flex items-baseline justify-between gap-4">
                   <dt className="text-white/60">Tahun ajaran</dt>
                   <dd>2025 / 2026</dd>
@@ -123,7 +123,7 @@ export default function Hero({ count = 0, onUploadClick }) {
           </motion.aside>
         </div>
 
-        <div className="mt-16 flex flex-col gap-3 border-y border-line py-4 font-mono text-[10px] uppercase tracking-[0.16em] text-muted sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-16 flex flex-col gap-3 border-y border-line py-4 font-mono text-[11px] uppercase tracking-[0.16em] text-muted sm:flex-row sm:items-center sm:justify-between">
           <span>Foto - dokumentasi harian</span>
           <span>Video - momen bersama</span>
           <span className="sm:text-right">Dirawat oleh admin kelas</span>

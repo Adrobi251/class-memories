@@ -11,7 +11,7 @@ export default function StatusToast({ message, onDismiss }) {
   }, [message, onDismiss])
 
   return (
-    <div className="fixed bottom-6 left-1/2 z-[400] w-[calc(100%-3rem)] max-w-md -translate-x-1/2">
+    <div className="fixed bottom-6 left-1/2 z-[500] w-[calc(100%-3rem)] max-w-md -translate-x-1/2">
       <AnimatePresence>
         {message && (
           <motion.div
@@ -20,7 +20,7 @@ export default function StatusToast({ message, onDismiss }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="flex items-center gap-3 rounded-lg border border-ink bg-paper px-4 py-3 shadow-card"
+            className="flex items-center gap-3 rounded-lg border border-ink bg-paper px-4 py-2 shadow-card"
           >
             <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-signal">
               <Check className="size-4 text-white" aria-hidden="true" />
@@ -29,7 +29,7 @@ export default function StatusToast({ message, onDismiss }) {
             <button
               type="button"
               onClick={onDismiss}
-              className="rounded-lg border border-line p-1 text-muted transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-white"
+              className="grid size-11 shrink-0 place-items-center rounded-lg border border-line text-muted transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-white"
               aria-label="Tutup notifikasi"
             >
               <X className="size-3.5" aria-hidden="true" />

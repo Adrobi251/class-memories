@@ -4,9 +4,9 @@ import Modal from './Modal'
 import { useAuth } from '../context/AuthContext'
 
 const inputClass =
-  'w-full rounded-lg border border-line bg-paper px-3 py-2.5 text-sm text-ink placeholder:text-cool transition-colors duration-200 focus:border-signal'
+  'w-full rounded-lg border border-line bg-paper px-3 py-2.5 text-sm text-ink placeholder:text-muted transition-colors duration-200 focus:border-signal'
 
-const labelClass = 'mb-1.5 block font-mono text-[10px] uppercase tracking-[0.16em] text-muted'
+const labelClass = 'mb-1.5 block font-mono text-[11px] uppercase tracking-[0.16em] text-muted'
 
 export default function AdminLoginModal({ open, onClose }) {
   const { signIn } = useAuth()
@@ -79,7 +79,7 @@ export default function AdminLoginModal({ open, onClose }) {
           type="submit"
           disabled={loading}
           aria-busy={loading}
-          className="w-full rounded-lg bg-signal py-2.5 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-signal-dark active:translate-y-0 disabled:translate-y-0 disabled:opacity-60"
+          className="min-h-11 w-full rounded-lg bg-signal text-xs font-semibold uppercase tracking-[0.1em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-signal-dark active:translate-y-0 disabled:translate-y-0 disabled:opacity-60"
         >
           {loading ? 'Memproses...' : 'Masuk'}
         </button>
