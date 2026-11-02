@@ -1,16 +1,53 @@
-# React + Vite
+﻿# Class Memories
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Landing page dokumentasi foto & video kelas, dengan upload khusus admin.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React + Vite (JavaScript)
+- Tailwind CSS v4
+- Motion (animasi)
+- Lucide React (icon)
+- Supabase (PostgreSQL + Auth + Storage)
+- Deploy: Vercel
 
-## React Compiler
+## Setup lokal
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Install dependencies:
 
-## Expanding the Oxlint configuration
+   ```bash
+   npm install
+   ```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+2. Copy env:
+
+   ```bash
+   copy .env.example .env
+   ```
+
+3. Isi `VITE_SUPABASE_URL` dan `VITE_SUPABASE_ANON_KEY` dari Supabase Dashboard > Project Settings > API.
+
+4. Jalankan SQL di `supabase/schema.sql` melalui Supabase Dashboard > SQL Editor. Ini membuat tabel `media`, bucket storage `media`, dan policy RLS.
+
+5. Buat akun admin di Supabase Dashboard > Authentication > Users > Add user (email + password). Disarankan matikan public sign-up di Authentication > Sign In / Providers.
+
+6. Jalankan dev server:
+
+   ```bash
+   npm run dev
+   ```
+
+## Fitur
+
+- Galeri publik foto & video
+- Preview foto/video dalam modal
+- Login admin via Supabase Auth
+- Upload foto/video + thumbnail video (admin only)
+- Hapus dokumentasi (admin only)
+- Row Level Security: publik hanya bisa baca
+
+## Deploy ke Vercel
+
+1. Import repo GitHub ini di Vercel.
+2. Tambahkan environment variables `VITE_SUPABASE_URL` dan `VITE_SUPABASE_ANON_KEY`.
+3. Deploy.
