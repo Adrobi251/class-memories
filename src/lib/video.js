@@ -4,7 +4,6 @@ const POSTER_EDGE = 1280
 const POSTER_QUALITY = 0.72
 const TIMEOUT_MS = 8000
 
-
 function once(target, event, timeoutMs) {
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => {
@@ -29,12 +28,56 @@ function once(target, event, timeoutMs) {
   })
 }
 
+export function readDuration(video) {
+  return Number.isFinite(video.duration) && video.duration > 0 ? video.duration : 0
+}
+
+export async function waitForMetadata(video, timeoutMs = TIMEOUT_MS) {
+  if (video.readyState >= 1 && readDuration(video) >= 0) return
+  await once(video, 'loadedmetadata', timeoutMs)
+}
+
+export async function seekVideo(video, time, timeoutMs = TIMEOUT_MS) {
+  const duration = readDuration(video)
+  const target = Math.max(0, Math.min(duration || 0, time))
+  if (Math.abs(video.currentTime - target) < 0.05) return
+  video.currentTime = target
+  await once(video, 'seeked', timeoutMs)
+}
+
+export async function captureFrame(video, { maxEdge = POSTER_EDGE, quality = POSTER_QUALITY } = {}) {
+  const width = video.videoWidth
+  const height = video.videoHeight
+  if (!width || !height) return null
+
+  const scale = Math.min(1, maxEdge / Math.max(width, height))
+  const targetW = Math.max(1, Math.round(width * scale))
+  const targetH = Math.max(1, Math.round(height * scale))
+
+  const canvas = document.createElement('canvas')
+  canvas.width = targetW
+  canvas.height = targetH
+  const context = canvas.getContext('2d')
+  if (!context) return null
+
+  const type = preferredImageType()
+  if (type === 'image/jpeg') {
+    context.fillStyle = '#ffffff'
+    context.fillRect(0, 0, targetW, targetH)
+  }
+  context.imageSmoothingQuality = 'high'
+  context.drawImage(video, 0, 0, targetW, targetH)
+
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => resolve(blob), type, quality)
+  })
+}
+
 /**
- * Grab a poster frame from a video file, in the browser.
- * Resolves to null when the browser cannot decode the file (e.g. HEVC .mov),
- * so the upload can still continue without a thumbnail.
+ * Grab a poster frame from a video file, outside the upload form.
+ * Resolves to null when the browser cannot decode the file (e.g. HEVC .mov).
  */
-export async function extractPoster(file, { maxEdge = POSTER_EDGE, quality = POSTER_QUALITY } = {}) {
+export async function extractPoster(file, options = {}) {
   if (!file.type.startsWith('video/')) return null
 
   const url = URL.createObjectURL(file)
@@ -42,42 +85,14 @@ export async function extractPoster(file, { maxEdge = POSTER_EDGE, quality = POS
   video.preload = 'metadata'
   video.muted = true
   video.playsInline = true
-  video.crossOrigin = 'anonymous'
 
   try {
     video.src = url
-    await once(video, 'loadedmetadata', TIMEOUT_MS)
-
-    const duration = Number.isFinite(video.duration) ? video.duration : 0
+    await waitForMetadata(video)
+    const duration = readDuration(video)
     const target = duration > 0 ? Math.min(1, duration * 0.1) : 0
-    video.currentTime = target
-    await once(video, 'seeked', TIMEOUT_MS)
-
-    const width = video.videoWidth
-    const height = video.videoHeight
-    if (!width || !height) return null
-
-    const scale = Math.min(1, maxEdge / Math.max(width, height))
-    const targetW = Math.max(1, Math.round(width * scale))
-    const targetH = Math.max(1, Math.round(height * scale))
-
-    const canvas = document.createElement('canvas')
-    canvas.width = targetW
-    canvas.height = targetH
-    const context = canvas.getContext('2d')
-    if (!context) return null
-
-    const type = preferredImageType()
-    if (type === 'image/jpeg') {
-      context.fillStyle = '#ffffff'
-      context.fillRect(0, 0, targetW, targetH)
-    }
-    context.imageSmoothingQuality = 'high'
-    context.drawImage(video, 0, 0, targetW, targetH)
-
-    return await new Promise((resolve) => {
-      canvas.toBlob((blob) => resolve(blob), type, quality)
-    })
+    await seekVideo(video, target)
+    return await captureFrame(video, options)
   } catch {
     return null
   } finally {
@@ -86,4 +101,3 @@ export async function extractPoster(file, { maxEdge = POSTER_EDGE, quality = POS
     URL.revokeObjectURL(url)
   }
 }
-

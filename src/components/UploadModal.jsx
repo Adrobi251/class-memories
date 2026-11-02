@@ -3,6 +3,7 @@ import { Image as ImageIcon } from 'lucide-react'
 import Modal from './Modal'
 import MediaTypeToggle from './MediaTypeToggle'
 import FileDropzone from './FileDropzone'
+import VideoPosterPicker from './VideoPosterPicker'
 import { supabase, MEDIA_BUCKET } from '../lib/supabase'
 import { preparePhoto, replaceExtension } from '../lib/image'
 import { extractPoster } from '../lib/video'
@@ -31,6 +32,7 @@ export default function UploadModal({ open, onClose, onUploaded }) {
   const [type, setType] = useState('foto')
   const [file, setFile] = useState(null)
   const [thumbnail, setThumbnail] = useState(null)
+  const [poster, setPoster] = useState(null)
   const [error, setError] = useState('')
   const [stage, setStage] = useState(null)
 
@@ -42,6 +44,7 @@ export default function UploadModal({ open, onClose, onUploaded }) {
     setType('foto')
     setFile(null)
     setThumbnail(null)
+    setPoster(null)
     setError('')
     setStage(null)
   }
@@ -56,6 +59,7 @@ export default function UploadModal({ open, onClose, onUploaded }) {
     setType(nextType)
     setFile(null)
     setThumbnail(null)
+    setPoster(null)
     setError('')
   }
 
@@ -102,8 +106,10 @@ export default function UploadModal({ open, onClose, onUploaded }) {
         }
       } else if (thumbnail) {
         thumbnailBody = thumbnail
+      } else if (poster) {
+        thumbnailBody = poster
       } else {
-        // No manual thumbnail: try to grab a poster frame from the video itself.
+        // Last resort: grab a poster frame from the video itself.
         setStage('compressing')
         thumbnailBody = await extractPoster(file)
       }
@@ -117,7 +123,7 @@ export default function UploadModal({ open, onClose, onUploaded }) {
         const thumbName =
           type === 'foto'
             ? safeName(replaceExtension(mainName, thumbnailBody.type || 'image/webp'))
-            : safeName(thumbnailBody.name ?? 'thumbnail.jpg')
+            : safeName(thumbnailBody.name ?? replaceExtension('thumbnail', thumbnailBody.type || 'image/webp'))
         const thumbPath = `thumbnails/${stamp}-${thumbName}`
         await uploadObject(thumbPath, thumbnailBody)
         thumbnailPath = thumbPath
@@ -187,6 +193,7 @@ export default function UploadModal({ open, onClose, onUploaded }) {
           hint={`Maks ${type === 'foto' ? MAX_PHOTO_MB : MAX_VIDEO_MB} MB`}
           onChange={(nextFile) => {
             setFile(nextFile)
+            setPoster(null)
             setError('')
           }}
         />
@@ -197,13 +204,22 @@ export default function UploadModal({ open, onClose, onUploaded }) {
           </p>
         )}
 
+        {type === 'video' && file && (
+          <VideoPosterPicker
+            key={`${file.name}:${file.size}:${file.lastModified}`}
+            file={file}
+            onSelect={setPoster}
+            disabled={loading}
+          />
+        )}
+
         {type === 'video' && (
           <FileDropzone
             id={thumbnailId}
             accept="image/*"
             file={thumbnail}
-            label="Thumbnail video (opsional)"
-            hint="JPG atau PNG"
+            label="Atau unggah thumbnail sendiri"
+            hint="Menimpa frame dari video"
             icon={ImageIcon}
             surface="paper"
             onChange={setThumbnail}
@@ -231,5 +247,8 @@ export default function UploadModal({ open, onClose, onUploaded }) {
     </Modal>
   )
 }
+
+
+
 
 
