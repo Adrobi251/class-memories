@@ -1,10 +1,6 @@
 import { ImageOff, RotateCcw } from 'lucide-react'
 
 const COPY = {
-  momen: {
-    title: 'Belum ada momen yang diceritakan.',
-    body: 'Momen muncul di sini saat admin menambahkan deskripsi pada foto atau video.',
-  },
   foto: {
     title: 'Belum ada foto di arsip.',
     body: 'Coba tampilkan semua dokumentasi atau pilih jenis media lain.',

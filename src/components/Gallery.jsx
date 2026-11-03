@@ -12,9 +12,6 @@ import MediaPreview from './MediaPreview'
 const PAGE_SIZE = 9
 const LOAD_STEP = 6
 
-function hasStory(item) {
-  return typeof item.description === 'string' && item.description.trim() !== ''
-}
 
 export default function Gallery({
   media,
@@ -42,7 +39,6 @@ export default function Gallery({
     const foto = media.filter((item) => item.media_type === 'foto').length
     return {
       semua: media.length,
-      momen: media.filter(hasStory).length,
       foto,
       video: media.length - foto,
     }
@@ -52,7 +48,6 @@ export default function Gallery({
     if (filter === 'foto' || filter === 'video') {
       return media.filter((item) => item.media_type === filter)
     }
-    if (filter === 'momen') return media.filter(hasStory)
     return media
   }, [filter, media])
 

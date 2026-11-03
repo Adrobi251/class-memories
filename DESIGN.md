@@ -90,7 +90,7 @@ mudah dijelajahi.
 
 **Heading** - Label: `OUR GALLERY` - Judul: **Moments in Our Journey.**
 
-**Filter kategori** - All - Moments - Photos - Videos
+**Filter kategori** - All - Photos - Videos
 
 **Layout galeri** - Grid asimetris dengan ukuran kartu bervariasi. -
 Beberapa kartu memanjang secara vertikal, sementara kartu lainnya

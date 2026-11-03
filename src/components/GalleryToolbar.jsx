@@ -1,8 +1,7 @@
-import { Images, LayoutGrid, Play, Sparkles } from 'lucide-react'
+import { Images, LayoutGrid, Play } from 'lucide-react'
 
 const GALLERY_FILTERS = [
   { value: 'semua', label: 'Semua', icon: LayoutGrid },
-  { value: 'momen', label: 'Momen', icon: Sparkles },
   { value: 'foto', label: 'Foto', icon: Images },
   { value: 'video', label: 'Video', icon: Play },
 ]

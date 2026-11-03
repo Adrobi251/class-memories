@@ -78,7 +78,7 @@ Database project ini **bukan MySQL/MariaDB**. Supabase memakai PostgreSQL, dan f
 | --- | --- | --- |
 | `id` | `uuid` | Primary key, default `gen_random_uuid()` |
 | `title` | `text` | Wajib, panjang 1–120 karakter |
-| `description` | `text` | Opsional. Item dengan deskripsi terisi muncul di filter **Momen** |
+| `description` | `text` | Opsional. Ditampilkan sebagai caption di modal preview |
 | `media_type` | `text` | `foto` atau `video` |
 | `storage_path` | `text` | Path file di bucket `media` |
 | `thumbnail_path` | `text` | Path poster video, opsional |
@@ -176,7 +176,7 @@ Hasil akhir: `http://class-memories.test` menyajikan situs, data tetap dari Supa
 8. **Verifikasi:**
 
    - Galeri tampil (bukan skeleton terus-menerus)
-   - Filter Semua / Momen / Foto / Video berfungsi
+   - Filter Semua / Foto / Video berfungsi
    - **Login Admin** berhasil dengan akun dari langkah 3
    - Upload foto/video lalu muncul di galeri
    - Hapus item berhasil
@@ -251,7 +251,7 @@ Bisa juga dikombinasikan: backend Supabase lokal dari Docker, frontend hasil bui
 ## Fitur
 
 - Hero sinematik dengan foto kelas
-- Galeri publik foto & video dengan filter Semua / Momen / Foto / Video
+- Galeri publik foto & video dengan filter Semua / Foto / Video
 - Tombol "Lihat Lebih Banyak" untuk memuat dokumentasi berikutnya
 - Section Video dan section cerita (Our Story)
 - Preview foto/video dalam modal
