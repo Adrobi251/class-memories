@@ -1,4 +1,4 @@
-﻿import { useId, useState } from 'react'
+import { useId, useState } from 'react'
 import { Image as ImageIcon } from 'lucide-react'
 import Modal from './Modal'
 import MediaTypeToggle from './MediaTypeToggle'
@@ -22,6 +22,28 @@ function safeName(name) {
     .toLowerCase()
     .replace(/[^a-z0-9.]+/g, '-')
     .replace(/^-+|-+$/g, '')
+}
+
+function formatUploadError(err) {
+  if (!err) return 'Upload gagal. Coba lagi.'
+  const msg = typeof err === 'string' ? err : err.message || ''
+
+  if (/row-level security|permission denied|violates rls/i.test(msg)) {
+    return 'Akses ditolak: Hanya admin yang berhak mengunggah. Silakan periksa status login Anda.'
+  }
+  if (/bucket.*not found/i.test(msg)) {
+    return 'Bucket penyimpanan Supabase belum siap atau tidak ditemukan.'
+  }
+  if (/payload too large|entity too large|413/i.test(msg)) {
+    return 'Ukuran file melebihi batas upload yang diizinkan server.'
+  }
+  if (/failed to fetch|networkerror|connection/i.test(msg)) {
+    return 'Koneksi terputus saat mengunggah. Periksa jaringan internet lalu coba lagi.'
+  }
+  if (/jwt expired|invalid token|unauthorized/i.test(msg)) {
+    return 'Sesi login admin telah berakhir. Silakan keluar dan login kembali.'
+  }
+  return msg || 'Upload gagal. Coba lagi.'
 }
 
 export default function UploadModal({ open, onClose, onUploaded }) {
@@ -142,7 +164,7 @@ export default function UploadModal({ open, onClose, onUploaded }) {
       onUploaded?.()
       onClose()
     } catch (err) {
-      setError(err.message ?? 'Upload gagal. Coba lagi.')
+      setError(formatUploadError(err))
       setStage(null)
     }
   }
@@ -239,7 +261,7 @@ export default function UploadModal({ open, onClose, onUploaded }) {
           type="submit"
           disabled={loading}
           aria-busy={loading}
-          className="min-h-11 w-full rounded-lg bg-signal text-xs font-semibold uppercase tracking-[0.1em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-signal-dark active:translate-y-0 disabled:translate-y-0 disabled:opacity-60"
+          className="min-h-11 w-full rounded-full bg-signal text-xs font-semibold uppercase tracking-[0.1em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-signal-dark active:translate-y-0 disabled:translate-y-0 disabled:opacity-60"
         >
           {submitLabel}
         </button>

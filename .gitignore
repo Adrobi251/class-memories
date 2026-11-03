@@ -34,8 +34,10 @@ __pycache__/
 
 # Local AI skills (not part of the project)
 .opencode/
+.impeccable/
 # Local performance notes
 PERF.md
+PRODUCT.md
 
 # Photos are not part of the repo, only the folder structure is.
 # Put the original photos in /images, run `npm run images`, and the generated

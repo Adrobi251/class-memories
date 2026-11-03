@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Pause, Play } from 'lucide-react'
 import { captureFrame, readDuration, seekVideo } from '../lib/video'
 
@@ -105,7 +105,11 @@ export default function VideoPosterPicker({ file, onSelect, disabled = false }) 
       const request = ++requestRef.current
       const blob = await grab(time)
       if (!mountedRef.current || request !== requestRef.current) return
-      if (blob) setPreview(blob)
+      if (blob) {
+        setPreview(blob)
+        setSelectedTime(time)
+        onSelectRef.current?.(blob)
+      }
     }, 150)
     return () => clearTimeout(id)
   }, [time, ready, failed, playing, selectedTime])
@@ -254,9 +258,9 @@ export default function VideoPosterPicker({ file, onSelect, disabled = false }) 
           onClick={confirmFrame}
           disabled={!ready || failed || disabled || busy}
           aria-busy={busy}
-          className="min-h-11 w-full shrink-0 rounded-lg border border-ink px-3 font-mono text-[11px] uppercase tracking-[0.12em] text-ink transition-colors duration-200 hover:bg-ink hover:text-paper disabled:opacity-50 sm:w-auto"
+          className="min-h-11 w-full shrink-0 rounded-full border border-ink px-4 font-mono text-[11px] uppercase tracking-[0.12em] text-ink transition-colors duration-200 hover:bg-ink hover:text-paper disabled:opacity-50 sm:w-auto"
         >
-          {busy ? 'Menyiapkan...' : isSelected ? 'Terpilih' : 'Gunakan frame'}
+          {busy ? 'Menyiapkan...' : isSelected ? '✓ Frame Aktif' : 'Gunakan Frame'}
         </button>
       </div>
     </div>

@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { Lock } from 'lucide-react'
 import Modal from './Modal'
 import { useAuth } from '../context/AuthContext'
@@ -35,9 +35,9 @@ export default function AdminLoginModal({ open, onClose }) {
   return (
     <Modal open={open} onClose={onClose} title="Login Admin">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <p className="flex items-start gap-2 border-l-2 border-signal bg-paper-soft px-3 py-2 text-sm text-muted">
-          <Lock className="mt-0.5 size-4 shrink-0 text-signal-bright" aria-hidden="true" />
-          Hanya admin kelas yang bisa mengunggah dokumentasi.
+        <p className="flex items-start gap-2.5 rounded-xl border border-line bg-paper-soft px-3.5 py-2.5 text-xs leading-relaxed text-muted">
+          <Lock className="mt-0.5 size-3.5 shrink-0 text-signal-bright" aria-hidden="true" />
+          Hanya admin kelas yang dapat mengunggah atau menghapus dokumentasi.
         </p>
 
         <label className="block">
@@ -79,7 +79,7 @@ export default function AdminLoginModal({ open, onClose }) {
           type="submit"
           disabled={loading}
           aria-busy={loading}
-          className="min-h-11 w-full rounded-lg bg-signal text-xs font-semibold uppercase tracking-[0.1em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-signal-dark active:translate-y-0 disabled:translate-y-0 disabled:opacity-60"
+          className="min-h-11 w-full rounded-full bg-signal text-xs font-semibold uppercase tracking-[0.1em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-signal-dark active:translate-y-0 disabled:translate-y-0 disabled:opacity-60"
         >
           {loading ? 'Memproses...' : 'Masuk'}
         </button>

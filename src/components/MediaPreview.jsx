@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { ArrowUpRight, ChevronLeft, ChevronRight, ImageOff } from 'lucide-react'
 import { getPublicUrl } from '../lib/supabaseConfig'
 
@@ -53,9 +53,9 @@ export default function MediaPreview({
           href={src}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-line px-3 font-mono text-[11px] uppercase tracking-[0.12em] text-ink transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-paper"
+          className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-line px-4 font-mono text-[11px] uppercase tracking-[0.12em] text-ink transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-paper"
         >
-          Buka file
+          Resolusi asli
           <ArrowUpRight className="size-3.5" aria-hidden="true" />
         </a>
       </div>
@@ -70,7 +70,7 @@ export default function MediaPreview({
             type="button"
             onClick={onPrev}
             aria-label="Dokumentasi sebelumnya"
-            className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-line px-3 text-xs font-semibold uppercase tracking-[0.08em] text-ink transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-paper"
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-line px-4 text-xs font-semibold uppercase tracking-[0.08em] text-ink transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-paper"
           >
             <ChevronLeft className="size-4" aria-hidden="true" />
             <span className="hidden sm:inline">Sebelumnya</span>
@@ -88,7 +88,7 @@ export default function MediaPreview({
             type="button"
             onClick={onNext}
             aria-label="Dokumentasi berikutnya"
-            className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-line px-3 text-xs font-semibold uppercase tracking-[0.08em] text-ink transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-paper"
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-line px-4 text-xs font-semibold uppercase tracking-[0.08em] text-ink transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-paper"
           >
             <span className="hidden sm:inline">Berikutnya</span>
             <ChevronRight className="size-4" aria-hidden="true" />

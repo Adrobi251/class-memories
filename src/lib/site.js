@@ -17,6 +17,5 @@ export const NAV_LINKS = [
   { label: 'Beranda', href: '#home', id: 'home' },
   { label: 'Galeri', href: '#gallery', id: 'gallery' },
   { label: 'Video', href: '#videos', id: 'videos' },
-  { label: 'Situs Kita', href: '#story', id: 'story' },
-  { label: 'Tentang', href: '#about', id: 'about' },
+  { label: 'Cerita', href: '#story', id: 'story' },
 ]

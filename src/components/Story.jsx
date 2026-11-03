@@ -56,10 +56,10 @@ export default function Story() {
             </p>
 
             <a
-              href="#about"
+              href="#gallery"
               className="mt-8 inline-flex min-h-12 items-center gap-2 rounded-full bg-soft px-6 text-[11px] font-semibold uppercase tracking-[0.18em] text-paper transition-all duration-200 hover:-translate-y-0.5 hover:bg-accent-soft active:translate-y-0"
             >
-              Tentang situs ini
+              Jelajahi Galeri
               <ArrowRight className="size-4" aria-hidden="true" />
             </a>
           </Reveal>

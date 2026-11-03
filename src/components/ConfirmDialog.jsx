@@ -1,4 +1,4 @@
-﻿import { AlertTriangle, Trash2 } from 'lucide-react'
+import { AlertTriangle, Trash2 } from 'lucide-react'
 import Modal from './Modal'
 
 const TYPE_LABEL = {
@@ -10,8 +10,8 @@ export default function ConfirmDialog({ open, item, busy, error, onClose, onConf
   return (
     <Modal open={open} onClose={onClose} title="Hapus dokumentasi?">
       <div className="space-y-4">
-        <p className="flex items-start gap-2 border-l-2 border-signal bg-paper-soft px-3 py-2 text-sm text-muted">
-          <AlertTriangle className="mt-0.5 size-4 shrink-0 text-signal-bright" aria-hidden="true" />
+        <p className="flex items-start gap-2.5 rounded-xl border border-line bg-paper-soft px-3.5 py-2.5 text-xs leading-relaxed text-muted">
+          <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-signal-bright" aria-hidden="true" />
           Tindakan ini permanen. File dan data dokumentasi akan dihapus dari arsip.
         </p>
 

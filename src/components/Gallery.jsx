@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowDownRight, RefreshCw } from 'lucide-react'
 import Modal from './Modal'
 import ConfirmDialog from './ConfirmDialog'
@@ -12,6 +12,17 @@ import MediaPreview from './MediaPreview'
 const PAGE_SIZE = 9
 const LOAD_STEP = 6
 
+function formatDeleteError(err) {
+  if (!err) return 'Gagal menghapus dokumentasi. Coba lagi.'
+  const msg = typeof err === 'string' ? err : err.message || ''
+  if (/row-level security|permission denied|violates rls/i.test(msg)) {
+    return 'Akses ditolak: Hanya admin yang berhak menghapus file. Pastikan sesi login masih aktif.'
+  }
+  if (/failed to fetch|networkerror/i.test(msg)) {
+    return 'Koneksi terputus saat mencoba menghapus file. Periksa koneksi internet Anda.'
+  }
+  return msg || 'Gagal menghapus dokumentasi.'
+}
 
 export default function Gallery({
   media,
@@ -116,7 +127,7 @@ export default function Gallery({
       setPendingDelete(null)
       onDeleted?.()
     } catch (err) {
-      setDeleteError(err.message ?? 'Gagal menghapus dokumentasi.')
+      setDeleteError(formatDeleteError(err))
     } finally {
       setDeleting(null)
     }
