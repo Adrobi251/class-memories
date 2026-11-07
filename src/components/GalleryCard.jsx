@@ -1,6 +1,5 @@
 ﻿import { Play } from 'lucide-react'
 import MediaThumbnail from './MediaThumbnail'
-import { galleryLayout } from '../lib/galleryLayout'
 
 function formatDate(value) {
   return new Date(value).toLocaleDateString('id-ID', {
@@ -12,13 +11,9 @@ function formatDate(value) {
 
 const TYPE_LABEL = { foto: 'Foto', video: 'Video' }
 
-export default function GalleryCard({ item, index, onOpen }) {
-  const { span, ratio } = galleryLayout(index)
-
+export default function GalleryCard({ item, onOpen }) {
   return (
-    <article
-      className={`${span} group relative animate-card-in self-start overflow-hidden rounded-2xl border border-white/10 bg-paper-soft`}
-    >
+    <article className="group relative mb-4 w-full break-inside-avoid animate-card-in overflow-hidden rounded-2xl border border-white/10 bg-paper-soft">
       <button
         type="button"
         onClick={() => onOpen(item)}
@@ -26,9 +21,9 @@ export default function GalleryCard({ item, index, onOpen }) {
         aria-label={`Buka ${item.media_type}: ${item.title}`}
         aria-haspopup="dialog"
       >
-        <span className={`relative block w-full overflow-hidden ${ratio}`}>
-          <span className="absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-[1.05] motion-reduce:transition-none motion-reduce:group-hover:scale-100">
-            <MediaThumbnail item={item} />
+        <span className="relative block w-full overflow-hidden">
+          <span className="block transition-transform duration-500 ease-out group-hover:scale-[1.05] motion-reduce:transition-none motion-reduce:group-hover:scale-100">
+            <MediaThumbnail item={item} natural />
           </span>
 
           <span aria-hidden="true" className="photo-scrim absolute inset-0" />

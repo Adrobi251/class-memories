@@ -2,7 +2,7 @@
 import { ImageOff, Play } from 'lucide-react'
 import { getPublicUrl } from '../lib/supabaseConfig'
 
-export default function MediaThumbnail({ item, priority = false }) {
+export default function MediaThumbnail({ item, priority = false, natural = false }) {
   const [failed, setFailed] = useState(false)
   const [useFallback, setUseFallback] = useState(false)
 
@@ -16,7 +16,9 @@ export default function MediaThumbnail({ item, priority = false }) {
   if (!src || failed) {
     return (
       <span
-        className={`grid size-full place-items-center ${isVideo ? 'bg-deep-blue' : 'bg-paper-soft'}`}
+        className={`grid place-items-center ${natural ? 'aspect-[4/3] w-full' : 'size-full'} ${
+          isVideo ? 'bg-deep-blue' : 'bg-paper-soft'
+        }`}
       >
         {isVideo ? (
           <Play className="size-10 text-white" aria-hidden="true" />
@@ -34,7 +36,7 @@ export default function MediaThumbnail({ item, priority = false }) {
     <img
       src={src}
       alt={isVideo ? `Thumbnail video: ${item.title}` : item.title}
-      className="size-full object-cover"
+      className={natural ? 'block h-auto w-full' : 'size-full object-cover'}
       loading={loading}
       fetchPriority={priority ? 'high' : undefined}
       decoding="async"

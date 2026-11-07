@@ -116,12 +116,11 @@ export default function Gallery({
         />
       ) : (
         <>
-          <div className="grid gap-4 md:grid-cols-12">
-            {visible.map((item, index) => (
+          <div className="columns-1 gap-4 sm:columns-2 lg:columns-3">
+            {visible.map((item) => (
               <GalleryCard
                 key={item.id}
                 item={item}
-                index={index}
                 onOpen={(next) => setSelectedId(next.id)}
               />
             ))}
