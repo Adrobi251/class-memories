@@ -1,11 +1,8 @@
-﻿import { ArrowRight, Play, Upload } from 'lucide-react'
-import { useAuth } from '../context/AuthContext'
+﻿import { ArrowRight, Play } from 'lucide-react'
 import { brandingUrl } from '../lib/supabaseConfig'
 import { site } from '../lib/site'
 
-export default function Hero({ onUploadClick }) {
-  const { isAdmin } = useAuth()
-
+export default function Hero() {
   return (
     <section
       id="home"
@@ -79,17 +76,6 @@ export default function Hero({ onUploadClick }) {
             <Play className="size-4 fill-current" aria-hidden="true" />
             Tonton Film
           </a>
-
-          {isAdmin && (
-            <button
-              type="button"
-              onClick={onUploadClick}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink/70 transition-colors duration-200 hover:text-ink"
-            >
-              <Upload className="size-4" aria-hidden="true" />
-              Upload
-            </button>
-          )}
         </div>
 
         <div

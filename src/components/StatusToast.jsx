@@ -1,7 +1,7 @@
-﻿import { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Check, X } from 'lucide-react'
 
-export default function StatusToast({ message, onDismiss }) {
+export default function StatusToast({ message, onDismiss, positionClass = 'bottom-6' }) {
   useEffect(() => {
     if (!message) return
 
@@ -10,7 +10,7 @@ export default function StatusToast({ message, onDismiss }) {
   }, [message, onDismiss])
 
   return (
-    <div className="fixed bottom-6 left-1/2 z-[500] w-[calc(100%-3rem)] max-w-md -translate-x-1/2">
+    <div className={`fixed ${positionClass} left-1/2 z-[500] w-[calc(100%-3rem)] max-w-md -translate-x-1/2`}>
       {message && (
         <div
           role="status"

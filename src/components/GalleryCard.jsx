@@ -1,4 +1,4 @@
-﻿import { Play, Trash2 } from 'lucide-react'
+﻿import { Play } from 'lucide-react'
 import MediaThumbnail from './MediaThumbnail'
 import { galleryLayout } from '../lib/galleryLayout'
 
@@ -12,7 +12,7 @@ function formatDate(value) {
 
 const TYPE_LABEL = { foto: 'Foto', video: 'Video' }
 
-export default function GalleryCard({ item, index, isAdmin, deleting, onOpen, onDelete }) {
+export default function GalleryCard({ item, index, onOpen }) {
   const { span, ratio } = galleryLayout(index)
 
   return (
@@ -63,24 +63,6 @@ export default function GalleryCard({ item, index, isAdmin, deleting, onOpen, on
           </span>
         </span>
       </button>
-
-      {isAdmin && (
-        <button
-          type="button"
-          onClick={() => onDelete(item)}
-          disabled={deleting}
-          aria-label={`Hapus ${item.title}`}
-          aria-haspopup="dialog"
-          aria-busy={deleting}
-          className="absolute right-3 top-3 z-10 grid size-11 place-items-center rounded-full border border-white/25 bg-black/40 text-white backdrop-blur-md transition-colors duration-200 hover:border-signal hover:bg-signal disabled:opacity-60"
-        >
-          {deleting ? (
-            <span className="block size-3 animate-pulse bg-white" aria-hidden="true" />
-          ) : (
-            <Trash2 className="size-4" aria-hidden="true" />
-          )}
-        </button>
-      )}
     </article>
   )
 }

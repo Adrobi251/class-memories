@@ -1,14 +1,11 @@
-﻿import { useEffect, useRef, useState } from 'react'
-import { Images, LogOut, Menu, Upload, X } from 'lucide-react'
-import { useAuth } from '../context/AuthContext'
+import { useEffect, useState } from 'react'
+import { Images, LayoutDashboard, Menu, X } from 'lucide-react'
 import { NAV_LINKS, site } from '../lib/site'
 
-export default function Navbar({ onLoginClick, onUploadClick }) {
-  const { isAdmin, signOut } = useAuth()
+export default function Navbar() {
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState('home')
   const [scrolled, setScrolled] = useState(false)
-  const toggleRef = useRef(null)
 
   useEffect(() => {
     const sections = NAV_LINKS.map((link) => document.getElementById(link.id)).filter(Boolean)
@@ -68,9 +65,6 @@ export default function Navbar({ onLoginClick, onUploadClick }) {
   function close() {
     setOpen(false)
   }
-
-  const adminButtonClass =
-    'grid size-11 place-items-center rounded-full border border-line text-muted transition-colors duration-200 hover:border-accent-soft hover:text-ink'
 
   return (
     <>
@@ -146,37 +140,15 @@ export default function Navbar({ onLoginClick, onUploadClick }) {
 
             <span aria-hidden="true" className="mx-1 hidden h-6 w-px bg-line sm:block" />
 
-            {isAdmin ? (
-              <div className="hidden items-center gap-2 lg:flex">
-                <button
-                  type="button"
-                  onClick={onUploadClick}
-                  className="inline-flex min-h-11 items-center gap-2 rounded-full border border-accent-soft/60 px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-accent-soft transition-colors duration-200 hover:border-accent-soft hover:bg-accent-soft hover:text-paper"
-                >
-                  <Upload className="size-4" aria-hidden="true" />
-                  Upload
-                </button>
-                <button
-                  type="button"
-                  onClick={() => signOut()}
-                  aria-label="Keluar dari akun admin"
-                  className={adminButtonClass}
-                >
-                  <LogOut className="size-4" aria-hidden="true" />
-                </button>
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={onLoginClick}
-                className="hidden min-h-11 items-center rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink/45 transition-colors duration-200 hover:text-ink lg:inline-flex"
-              >
-                Login Admin
-              </button>
-            )}
+            <a
+              href="#/admin"
+              className="hidden min-h-11 items-center gap-2 rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink/45 transition-colors duration-200 hover:text-ink lg:inline-flex"
+            >
+              <LayoutDashboard className="size-4" aria-hidden="true" />
+              Dashboard
+            </a>
 
             <button
-              ref={toggleRef}
               type="button"
               className="grid size-11 place-items-center rounded-full border border-line text-ink lg:hidden"
               onClick={() => setOpen((v) => !v)}
@@ -198,70 +170,38 @@ export default function Navbar({ onLoginClick, onUploadClick }) {
             id="mobile-menu"
             className="animate-menu-in border-t border-white/10 bg-paper/95 px-5 py-6 backdrop-blur-xl sm:px-8 lg:hidden"
           >
-              <div className="flex flex-col">
-                {NAV_LINKS.map((link) => (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => {
-                      setActive(link.id)
-                      close()
-                    }}
-                    aria-current={active === link.id ? 'location' : undefined}
-                    className={`flex min-h-12 items-center justify-between border-b border-line/60 text-sm font-semibold uppercase tracking-[0.18em] ${
-                      active === link.id ? 'text-accent-soft' : 'text-ink/70'
-                    }`}
-                  >
-                    {link.label}
-                    <span className="text-[10px] tracking-[0.2em] text-muted">
-                      {String(NAV_LINKS.indexOf(link) + 1).padStart(2, '0')}
-                    </span>
-                  </a>
-                ))}
-              </div>
+            <div className="flex flex-col">
+              {NAV_LINKS.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => {
+                    setActive(link.id)
+                    close()
+                  }}
+                  aria-current={active === link.id ? 'location' : undefined}
+                  className={`flex min-h-12 items-center justify-between border-b border-line/60 text-sm font-semibold uppercase tracking-[0.18em] ${
+                    active === link.id ? 'text-accent-soft' : 'text-ink/70'
+                  }`}
+                >
+                  {link.label}
+                  <span className="text-[10px] tracking-[0.2em] text-muted">
+                    {String(NAV_LINKS.indexOf(link) + 1).padStart(2, '0')}
+                  </span>
+                </a>
+              ))}
+            </div>
 
-              <div className="mt-5 flex flex-col gap-2">
-                {isAdmin ? (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        close()
-                        toggleRef.current?.focus()
-                        onUploadClick()
-                      }}
-                      className="flex min-h-11 items-center justify-center gap-2 rounded-full bg-signal px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-white"
-                    >
-                      <Upload className="size-4" aria-hidden="true" />
-                      Upload dokumentasi
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        close()
-                        toggleRef.current?.focus()
-                        signOut()
-                      }}
-                      className="flex min-h-11 items-center justify-center gap-2 rounded-full border border-line px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink"
-                    >
-                      <LogOut className="size-4" aria-hidden="true" />
-                      Keluar
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      close()
-                      toggleRef.current?.focus()
-                      onLoginClick()
-                    }}
-                    className="flex min-h-11 items-center justify-center rounded-full border border-line px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink"
-                  >
-                    Login Admin
-                  </button>
-                )}
-              </div>
+            <div className="mt-5 flex flex-col gap-2">
+              <a
+                href="#/admin"
+                onClick={close}
+                className="flex min-h-11 items-center justify-center gap-2 rounded-full border border-line px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink"
+              >
+                <LayoutDashboard className="size-4" aria-hidden="true" />
+                Dashboard
+              </a>
+            </div>
           </div>
         )}
       </header>
