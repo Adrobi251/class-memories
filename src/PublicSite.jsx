@@ -28,7 +28,7 @@ export default function PublicSite() {
       <Navbar />
 
       <main id="main-content" tabIndex={-1} className="outline-none">
-        <Hero />
+        <Hero media={media} />
 
         <section
           id="gallery"

@@ -250,7 +250,7 @@ Bisa juga dikombinasikan: backend Supabase lokal dari Docker, frontend hasil bui
 
 ## Fitur
 
-- Hero sinematik dengan foto kelas
+- Hero sinematik dengan 5 foto terbaru yang bergantian otomatis
 - Galeri publik foto & video dengan filter Semua / Foto / Video
 - Tombol "Lihat Lebih Banyak" untuk memuat dokumentasi berikutnya
 - Section Video dan section cerita (Our Story)

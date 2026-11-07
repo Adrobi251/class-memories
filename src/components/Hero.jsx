@@ -1,29 +1,81 @@
-﻿import { ArrowRight, Play } from 'lucide-react'
-import { brandingUrl } from '../lib/supabaseConfig'
+﻿import { useEffect, useMemo, useState } from 'react'
+import { ArrowRight, Play } from 'lucide-react'
+import { brandingUrl, getPublicUrl } from '../lib/supabaseConfig'
 import { site } from '../lib/site'
 
-export default function Hero() {
+const MAX_SLIDES = 5
+const SLIDE_MS = 6000
+
+export default function Hero({ media = [] }) {
+  const slides = useMemo(
+    () =>
+      media
+        .filter((item) => item.media_type === 'foto' && item.storage_path)
+        .slice(0, MAX_SLIDES)
+        .map((item) => ({
+          id: item.id,
+          src: getPublicUrl(item.storage_path),
+          thumb: getPublicUrl(item.thumbnail_path),
+        })),
+    [media],
+  )
+
+  const [active, setActive] = useState(0)
+  const current = slides.length ? active % slides.length : 0
+
+  useEffect(() => {
+    if (slides.length < 2) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const timer = window.setInterval(() => {
+      if (document.hidden) return
+      setActive((index) => (index + 1) % slides.length)
+    }, SLIDE_MS)
+
+    return () => window.clearInterval(timer)
+  }, [slides.length])
+
   return (
     <section
       id="home"
       aria-labelledby="home-title"
       className="relative isolate flex min-h-[100svh] items-end overflow-hidden scroll-mt-20"
     >
-      <picture>
-        <source
-          type="image/webp"
-          srcSet={`${brandingUrl('hero-960.webp')} 960w, ${brandingUrl('hero-1920.webp')} 1920w`}
-          sizes="100vw"
-        />
-        <img
-          src={brandingUrl('hero-1920.webp')}
-          alt=""
-          aria-hidden="true"
-          fetchPriority="high"
-          decoding="async"
-          className="absolute inset-0 -z-20 size-full object-cover object-center contrast-125 grayscale-[35%]"
-        />
-      </picture>
+      <div aria-hidden="true" className="absolute inset-0 -z-20">
+        <picture className="absolute inset-0 block">
+          <source
+            type="image/webp"
+            srcSet={`${brandingUrl('hero-960.webp')} 960w, ${brandingUrl('hero-1920.webp')} 1920w`}
+            sizes="100vw"
+          />
+          <img
+            src={brandingUrl('hero-1920.webp')}
+            alt=""
+            fetchPriority="high"
+            decoding="async"
+            className="size-full object-cover object-center contrast-125 grayscale-[35%]"
+          />
+        </picture>
+
+        {slides.map((slide, index) => (
+          <picture
+            key={slide.id}
+            className={`absolute inset-0 block transition-opacity duration-1000 ${
+              index === current ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            {slide.thumb && <source media="(max-width: 640px)" srcSet={slide.thumb} />}
+            <img
+              src={slide.src}
+              alt=""
+              loading={index === 0 ? 'eager' : 'lazy'}
+              fetchPriority={index === 0 ? 'high' : undefined}
+              decoding="async"
+              className="size-full object-cover object-center contrast-125 grayscale-[35%]"
+            />
+          </picture>
+        ))}
+      </div>
 
       <div
         aria-hidden="true"
